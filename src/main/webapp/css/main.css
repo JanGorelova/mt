@@ -1,0 +1,237 @@
+/* Main page */
+body {
+    background: #d5ebf7;
+}
+
+a {
+    color: #22aaff;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+hr {
+    background-color: #d5ebf7;
+    height: 1px;
+    border: 0;
+}
+
+ul {
+    list-style: none;
+}
+
+ul.menu {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+    background: white;
+    height: 100%;
+}
+
+li.menu {
+    float: left;
+}
+
+#header {
+    background: white;
+    width: 100%;
+    height: 55px;
+    color: black;
+    border: 1px solid #22aaff;
+    float: left;
+}
+
+#logo {
+    float: left;
+    width: 250px;
+    height: 100%;
+    background: #22aaff;
+    color: azure;
+    font-family: sans-serif;
+    font-size: xx-large;
+    line-height: 55px;
+}
+
+.menu {
+    float: left;
+    width: auto;
+}
+
+#container {
+    background: #d5ebf7;
+    margin: auto auto;
+    text-align: center;
+    width: 1024px;
+    height: 100%;
+}
+
+#sidebar {
+    background: #ffffff;
+    float: left;
+    width: 250px;
+    height: 600px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-right: 5px;
+    border: 1px solid #22aaff;
+    border-radius: 8px;
+}
+
+#content {
+    background: white;
+    float: right;
+    width: 760px;
+    min-height: 600px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 5px;
+    border: 1px solid #22aaff;
+    border-radius: 8px;
+}
+
+.clear {
+    clear: both;
+}
+
+#footer {
+    background: white;
+    width: 100%;
+    height: 40px;
+    border: 1px solid #22aaff;
+    border-radius: 8px;
+    line-height: 40px;
+    color: #22aaff;
+}
+
+a.menu {
+    text-decoration: none;
+    background: white;
+    color: #22aaff;
+    padding: 0px 15px;
+    font-family: arial, serif;
+    line-height: 55px;
+    display: block;
+}
+
+a.menu:hover {
+    background: #22aaff;
+    color: white;
+}
+
+#user {
+    width: 100%;
+    max-width: 250px;
+    height: 55px;
+}
+
+#usericon {
+    float: left;
+    margin: 5px;
+}
+
+#userinfo {
+    float: left;
+    margin: 5px;
+    text-align: left;
+}
+
+#login {
+    text-align: left;
+    font-size: x-large;
+    font-family: serif;
+}
+
+#name {
+    text-align: left;
+    font-size: small;
+    font-family: serif;
+    color: dimgray;
+}
+
+#instruments {
+    float: left;
+    text-align: left;
+    color: dimgray;
+    margin: 5px;
+    width: 250px;
+}
+
+#newTweet {
+    float: left;
+    width: 250px;
+    height: 200px;
+}
+
+#tweet {
+    width: 220px;
+    height: 170px;
+    resize: none;
+    border: 1px solid #22aaff;
+    border-radius: 8px;
+    outline: none;
+    padding: 5px;
+}
+
+.button {
+    width: 115px;
+    color: #22aaff;
+    text-align: center;
+    border: 1px solid #22aaff;
+    border-radius: 8px;
+    background: white;
+    outline: none;
+}
+
+.button:hover {
+    color: white;
+    background: #22aaff;
+    cursor: pointer;
+}
+
+.button:active {
+    background: #0176ff;
+}
+
+.singleTweet {
+    float: left;
+    width: 750px;
+    padding: 5px;
+}
+
+.tweetPic {
+    float: left;
+    padding: 5px;
+    padding-right: 10px;
+}
+
+.tweetContent {
+    float: left;
+    width: 680px;
+    text-align: left;
+}
+
+.tweetUser {
+    font-family: serif;
+    font-size: large;
+}
+
+.tweetInstrument {
+    font-family: serif;
+    font-size: small;
+    color: dimgray;
+}
+
+.tweetDate {
+    font-family: serif;
+    font-size: small;
+    color: dimgray;
+}
+
+.tweetText {
+}
+
+.tweetLike {
+    font-family: serif;
+    font-size: small;
+}
