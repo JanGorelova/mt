@@ -37,21 +37,7 @@ public class GetSubscriptions extends HttpServlet {
         DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
         if (daoFactory != null && user != null) {
             List<Tweet> tweets = daoFactory.getMessageDao().getSubscriptionMessages(user.getUserId());
-            for (Tweet tweet : tweets) {
-                out.write("<div class=\"singleTweet\">");
-                out.write(" <div class=\"tweetPic\">");
-                out.write("     <img src=\"/img/tweet_icon.png\" />");
-                out.write(" </div>");
-                out.write(" <div class=\"tweetContent\">");
-                out.write("     <span class=\"tweetUser\">" + tweet.getLogin() + "</span>");
-                out.write("     <span class=\"tweetInstrument\">vocals, guitar</span>");
-                out.write("     <span class=\"tweetDate\"> - " + tweet.getMessageDate().format(formatter) + "</span><br>");
-                out.write("     <span class=\"tweetText\">" + tweet.getMessageText() + "</span><br>");
-                out.write("     <span class=\"tweetLike\"><a href=\"#\">" + bundle.getString("like")
-                        + "</a> (" + tweet.getLikes() + "), <a href=\"#\">" + bundle.getString("subscribe") + "</a></span>");
-                out.write(" </div>");
-                out.write("</div><div class=\"clear\"><hr></div>");
-            }
+            out.write(ProcessTweets.process(tweets, bundle, formatter));
         }
     }
 

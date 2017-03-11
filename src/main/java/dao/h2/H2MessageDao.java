@@ -21,7 +21,10 @@ public class H2MessageDao implements MessageDao {
 
     private final String GET_SUBSCRIPTION_MESSAGES_SQL =
             "SELECT m.message_id, m.user_id, m.message_date, m.message_text, u.login, " +
-                    "(SELECT COUNT(like_id) FROM Likes WHERE Likes.message_id = m.message_id) AS like_count " +
+                    "(SELECT COUNT(like_id) FROM Likes WHERE Likes.message_id = m.message_id) AS like_count, " +
+                    "(SELECT GROUP_CONCAT(i.instrument_name SEPARATOR ', ') FROM Instruments AS i " +
+                    "INNER JOIN Users_Instruments AS ui ON i.instrument_id = ui.instrument_id " +
+                    "WHERE ui.user_id = m.user_id GROUP BY ui.user_id) AS instruments_string " +
                     "FROM Messages AS m " +
                     "INNER JOIN Subscriptions AS s " +
                     "ON (s.subscripted_user_id = m.user_id) " +
@@ -86,6 +89,8 @@ public class H2MessageDao implements MessageDao {
                     tweet.setMessageText(resultSet.getString("message_text"));
                     tweet.setLogin(resultSet.getString("login"));
                     tweet.setLikes(resultSet.getInt("like_count"));
+                    tweet.setInstruments(resultSet.getString("instruments_string") == null
+                            ? "" : resultSet.getString("instruments_string"));
                     tweets.add(tweet);
                 }
             }

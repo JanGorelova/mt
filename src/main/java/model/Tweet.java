@@ -6,7 +6,7 @@ package model;
 public class Tweet extends Message {
 
     private String login;
-    private String[] instrument;
+    private String instruments;
     private int likes;
 
     public Tweet() {
@@ -21,12 +21,12 @@ public class Tweet extends Message {
         this.login = login;
     }
 
-    public String[] getInstrument() {
-        return instrument;
+    public String getInstruments() {
+        return instruments;
     }
 
-    public void setInstrument(String[] instrument) {
-        this.instrument = instrument;
+    public void setInstruments(String instruments) {
+        this.instruments = instruments;
     }
 
     public int getLikes() {

@@ -13,11 +13,11 @@ public interface LikeDao {
 
     long createLike(Like like);
 
-    Like readLike(long likeId);
+    long getLikeId(Like like) throws SQLException;
 
-    void updateLike(Like like) throws SQLException;
+    void updateLike(Like like);
 
-    void deleteLike(long likeId) throws SQLException;
+    void deleteLike(long likeId);
 
     int getLikeCount(long messageId);
 

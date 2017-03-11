@@ -24,8 +24,3 @@ INSERT INTO Messages (user_id, message_date, message_text) VALUES (2, '2011-02-0
 INSERT INTO Messages (user_id, message_date, message_text) VALUES (3, '2012-03-07', 'What''s up?');
 INSERT INTO Messages (user_id, message_date, message_text) VALUES (4, '2013-04-07', 'What''s up? What''s up? What''s up?');
 INSERT INTO Messages (user_id, message_date, message_text) VALUES (1, '2014-04-07', 'Admin first tweet');
-
-INSERT INTO Likes (user_id, message_id) VALUES (1, 2);
-INSERT INTO Likes (user_id, message_id) VALUES (1, 3);
-INSERT INTO Likes (user_id, message_id) VALUES (2, 5);
-INSERT INTO Likes (user_id, message_id) VALUES (3, 5);
