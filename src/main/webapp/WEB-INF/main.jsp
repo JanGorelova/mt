@@ -26,6 +26,8 @@
     <fmt:message bundle="${loc}" key="subscribe" var="subscribe"/>
     <fmt:message bundle="${loc}" key="subscriptions" var="subscriptions"/>
 
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <script src="<c:url value="/js/main.js" />" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="<c:url value = "/css/main.css" />"/>
     <title>${sessionScope.User.login} - MusicTwitter</title>
 </head>
@@ -38,7 +40,7 @@
         </div>
         <div id="menu">
             <ul class="menu">
-                <li class="menu"><a href="#" class="menu">${subscriptions}</a></li>
+                <li class="menu"><a class="menu" onclick="getSubscriptionTweets()">${subscriptions}</a></li>
                 <li class="menu"><a href="#" class="menu">${instruments}</a></li>
                 <li class="menu"><a href="#" class="menu">${country}</a></li>
                 <li class="menu"><a href="#" class="menu">${myTweets}</a></li>
@@ -61,19 +63,19 @@
             <div id="instruments">
                 <ul>
                     <c:forEach var="item" items="${sessionScope.Instruments}">
-                       <li><img src="<c:url value="/img/note_icon.png"/>" width="20" height="20"/>
-                       ${item.instrumentName}</li>
+                        <li><img src="<c:url value="/img/note_icon.png"/>" width="20" height="20"/>
+                                ${item.instrumentName}</li>
                     </c:forEach>
                 </ul>
             </div>
         </div>
 
         <div id="newTweet">
-            <form action="newTweet">
+            <form method="post">
                 <div style="text-align: center;">
                     <textarea name="tweet" id="tweet" placeholder="${newTweetPlaceholder}" maxlength="250"></textarea>
                 </div>
-                <input type="submit" class="button" value="${post}">
+                <input type="button" class="button" value="${post}" onclick="newTweet()">
                 <input type="reset" class="button" value="${cancel}">
             </form>
         </div>
@@ -81,38 +83,6 @@
     </div>
 
     <div id="content">
-
-        <div class="singleTweet">
-            <div class="tweetPic">
-                <img src="<c:url value="/img/tweet_icon.png"/>">
-            </div>
-            <div class="tweetContent">
-                <span class="tweetUser">Jagger</span>
-                <span class="tweetInstrument">vocals, guitar</span>
-                <span class="tweetDate"> - 01.01.2017 12:22</span><br>
-                <span class="tweetText">This is just a text... I can't get no satisfaction!</span><br>
-                <span class="tweetLike"><a href="#">${like}</a> (34), <a href="#">${subscribe}</a></span>
-            </div>
-        </div>
-        <div class="clear">
-            <hr>
-        </div>
-
-        <div class="singleTweet">
-            <div class="tweetPic">
-                <img src="<c:url value="/img/tweet_icon.png"/>">
-            </div>
-            <div class="tweetContent">
-                <span class="tweetUser">Jagger</span>
-                <span class="tweetInstrument">vocals, guitar</span>
-                <span class="tweetDate"> - 01.01.2017 12:22</span><br>
-                <span class="tweetText">This is just a text... I can't get no satisfaction! This is just a text... I can't get no satisfaction! This is just a text... I can't get no satisfaction!</span><br>
-                <span class="tweetLike"><a href="#">${like}</a>(34), <a href="#">${subscribe}</a></span>
-            </div>
-        </div>
-        <div class="clear">
-            <hr>
-        </div>
 
     </div>
 

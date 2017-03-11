@@ -10,16 +10,14 @@ public class Like {
     private long likeId;
     private long userId;
     private long messageId;
-    private Date likeTime;
 
     public Like() {
     }
 
-    public Like(long likeId, long userId, long messageId, Date date) {
+    public Like(long likeId, long userId, long messageId) {
         this.likeId = likeId;
         this.userId = userId;
         this.messageId = messageId;
-        this.likeTime = date;
     }
 
     public long getLikeId() {
@@ -44,13 +42,5 @@ public class Like {
 
     public void setMessageId(long messageId) {
         this.messageId = messageId;
-    }
-
-    public Date getLikeTime() {
-        return likeTime;
-    }
-
-    public void setLikeTime(Date likeTime) {
-        this.likeTime = likeTime;
     }
 }

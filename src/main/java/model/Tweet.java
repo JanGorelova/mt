@@ -7,7 +7,7 @@ public class Tweet extends Message {
 
     private String login;
     private String[] instrument;
-    private long likes;
+    private int likes;
 
     public Tweet() {
         super();
@@ -29,11 +29,11 @@ public class Tweet extends Message {
         this.instrument = instrument;
     }
 
-    public long getLikes() {
+    public int getLikes() {
         return likes;
     }
 
-    public void setLikes(long likes) {
+    public void setLikes(int likes) {
         this.likes = likes;
     }
 }

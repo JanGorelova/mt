@@ -20,13 +20,14 @@ public class H2MessageDao implements MessageDao {
             "INSERT INTO Messages (user_id, message_date, message_text) VALUES (?, ?, ?);";
 
     private final String GET_SUBSCRIPTION_MESSAGES_SQL =
-            "SELECT m.message_id, m.user_id, m.message_date, m.message_text, u.login " +
+            "SELECT m.message_id, m.user_id, m.message_date, m.message_text, u.login, " +
+                    "(SELECT COUNT(like_id) FROM Likes WHERE Likes.message_id = m.message_id) AS like_count " +
                     "FROM Messages AS m " +
                     "INNER JOIN Subscriptions AS s " +
                     "ON (s.subscripted_user_id = m.user_id) " +
                     "INNER JOIN Users AS u " +
                     "ON (m.user_id = u.user_id) " +
-                    "WHERE s.user_id = ?";
+                    "WHERE s.user_id = ? ORDER BY m.message_date DESC;";
 
     public H2MessageDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -39,6 +40,7 @@ public class H2MessageDao implements MessageDao {
             statement.setLong(1, message.getUserId());
             statement.setTimestamp(2, Timestamp.valueOf(message.getMessageDate()));
             statement.setString(3, message.getMessageText());
+            statement.executeUpdate();
             try (ResultSet resultSet = statement.getGeneratedKeys()) {
                 if (resultSet.next()) {
                     return resultSet.getLong(1);
@@ -83,6 +85,7 @@ public class H2MessageDao implements MessageDao {
                     tweet.setMessageDate(resultSet.getTimestamp("message_date").toLocalDateTime());
                     tweet.setMessageText(resultSet.getString("message_text"));
                     tweet.setLogin(resultSet.getString("login"));
+                    tweet.setLikes(resultSet.getInt("like_count"));
                     tweets.add(tweet);
                 }
             }

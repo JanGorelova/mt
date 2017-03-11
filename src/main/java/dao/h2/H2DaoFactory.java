@@ -37,7 +37,7 @@ public class H2DaoFactory implements DaoFactory {
 
     @Override
     public MessageDao getMessageDao() {
-        return null;
+        return new H2MessageDao(dataSource);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class H2DaoFactory implements DaoFactory {
 
     @Override
     public LikeDao getLikeDao() {
-        return null;
+        return new H2LikeDao(dataSource);
     }
 
     @Override

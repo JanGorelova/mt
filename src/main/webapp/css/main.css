@@ -58,19 +58,35 @@ li.menu {
     width: auto;
 }
 
+a.menu {
+    text-decoration: none;
+    background: white;
+    color: #22aaff;
+    padding: 0px 25px;
+    font-family: arial, serif;
+    line-height: 55px;
+    display: block;
+}
+
+a.menu:hover {
+    background: #22aaff;
+    color: white;
+    cursor: pointer;
+}
+
 #container {
     background: #d5ebf7;
     margin: auto auto;
     text-align: center;
     width: 1024px;
-    height: 100%;
+    min-height: 100%;
 }
 
 #sidebar {
     background: #ffffff;
     float: left;
     width: 250px;
-    height: 600px;
+    min-height: 600px;
     margin-bottom: 10px;
     margin-top: 10px;
     margin-right: 5px;
@@ -102,21 +118,6 @@ li.menu {
     border-radius: 8px;
     line-height: 40px;
     color: #22aaff;
-}
-
-a.menu {
-    text-decoration: none;
-    background: white;
-    color: #22aaff;
-    padding: 0px 15px;
-    font-family: arial, serif;
-    line-height: 55px;
-    display: block;
-}
-
-a.menu:hover {
-    background: #22aaff;
-    color: white;
 }
 
 #user {

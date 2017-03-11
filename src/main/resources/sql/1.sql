@@ -24,7 +24,6 @@ CREATE TABLE Likes (
 like_id    BIGINT AUTO_INCREMENT PRIMARY KEY,
 user_id    BIGINT    NOT NULL,
 message_id BIGINT    NOT NULL,
-like_time  TIMESTAMP NOT NULL,
 FOREIGN KEY (user_id) REFERENCES Users (user_id),
 FOREIGN KEY (message_id) REFERENCES Messages (message_id)
 );

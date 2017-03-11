@@ -53,4 +53,9 @@ public class Message {
     public void setMessageText(String messageText) {
         this.messageText = messageText;
     }
+
+    @Override
+    public String toString() {
+        return messageId + " " + userId + " " + messageText;
+    }
 }
