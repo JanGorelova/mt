@@ -1,6 +1,7 @@
 package controllers;
 
 import dao.DaoFactory;
+import model.Instrument;
 import model.Tweet;
 import model.User;
 
@@ -18,10 +19,10 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Created by iMac on 10/03/17.
+ * Created by Air on 11/03/2017.
  */
-@WebServlet("/GetSubscriptions")
-public class GetSubscriptions extends HttpServlet {
+@WebServlet("/GetMyTweets")
+public class GetMyTweets extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html; charset=UTF-8");
@@ -33,30 +34,19 @@ public class GetSubscriptions extends HttpServlet {
         Locale locale = new Locale(localeString);
         ResourceBundle bundle = ResourceBundle.getBundle("main", locale);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(locale);
-
         DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
+
         if (daoFactory != null && user != null) {
-            List<Tweet> tweets = daoFactory.getMessageDao().getSubscriptionMessages(user.getUserId());
+            List<Instrument> instrumentList = daoFactory.getInstrumentDao().getUserInstruments(user.getUserId());
+            StringBuilder instruments = new StringBuilder();
+            for (Instrument instrument : instrumentList) {
+                instruments.append(instrument.getInstrumentName()).append(", ");
+            }
+            instruments.delete(instruments.length() - 2, instruments.length());
+            List<Tweet> tweets = daoFactory.getMessageDao().getUserMessages(user, instruments.toString());
             out.write(ProcessTweets.process(tweets, bundle, formatter));
         }
     }
-
-//            <div class="singleTweet">
-//            <div class="tweetPic">
-//                <img src="<c:url value="/img/tweet_icon.png"/>">
-//            </div>
-//            <div class="tweetContent">
-//                <span class="tweetUser">Jagger</span>
-//                <span class="tweetInstrument">vocals, guitar</span>
-//                <span class="tweetDate"> - 01.01.2017 12:22</span><br>
-//                <span class="tweetText">This is just a text... I can't get no satisfaction!</span><br>
-//                <span class="tweetLike"><a href="#">${like}</a> (34), <a href="#">${subscribe}</a></span>
-//            </div>
-//        </div>
-//        <div class="clear">
-//            <hr>
-//        </div>
-//
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);

@@ -2,6 +2,7 @@ package dao;
 
 import model.Message;
 import model.Tweet;
+import model.User;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -19,7 +20,7 @@ public interface MessageDao {
 
     void deleteMessage(long messageId) throws SQLException;
 
-    List<Tweet> getUserMessages(long userId);
+    List<Tweet> getUserMessages(User user, String instruments);
 
     List<Tweet> getSubscriptionMessages(long userId);
 

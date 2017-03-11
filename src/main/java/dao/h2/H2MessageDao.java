@@ -1,8 +1,10 @@
 package dao.h2;
 
 import dao.MessageDao;
+import model.Instrument;
 import model.Message;
 import model.Tweet;
+import model.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -18,6 +20,11 @@ public class H2MessageDao implements MessageDao {
 
     private final String CREATE_MESSAGE_SQL =
             "INSERT INTO Messages (user_id, message_date, message_text) VALUES (?, ?, ?);";
+
+    private final String GET_USER_MESSAGES_SQL =
+            "SELECT message_id, message_date, message_text, " +
+                    "(SELECT COUNT(like_id) FROM Likes WHERE Likes.message_id = m.message_id) AS like_count " +
+                    "FROM Messages AS m WHERE user_id = ? ORDER BY m.message_date DESC;";
 
     private final String GET_SUBSCRIPTION_MESSAGES_SQL =
             "SELECT m.message_id, m.user_id, m.message_date, m.message_text, u.login, " +
@@ -71,8 +78,27 @@ public class H2MessageDao implements MessageDao {
     }
 
     @Override
-    public List<Tweet> getUserMessages(long userId) {
-        return null;
+    public List<Tweet> getUserMessages(User user, String instruments) {
+        List<Tweet> tweets = new ArrayList<>();
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_USER_MESSAGES_SQL)) {
+            statement.setLong(1, user.getUserId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Tweet tweet = new Tweet();
+                    tweet.setMessageId(resultSet.getLong("message_id"));
+                    tweet.setUserId(user.getUserId());
+                    tweet.setMessageDate(resultSet.getTimestamp("message_date").toLocalDateTime());
+                    tweet.setMessageText(resultSet.getString("message_text"));
+                    tweet.setLogin(user.getLogin());
+                    tweet.setLikes(resultSet.getInt("like_count"));
+                    tweet.setInstruments(instruments);
+                    tweets.add(tweet);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("getUserMessages() - " + e.getMessage());
+        }
+        return tweets;
     }
 
     @Override

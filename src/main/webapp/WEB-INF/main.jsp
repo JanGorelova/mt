@@ -43,7 +43,7 @@
                 <li class="menu"><a class="menu" onclick="getSubscriptionTweets()">${subscriptions}</a></li>
                 <li class="menu"><a href="#" class="menu">${instruments}</a></li>
                 <li class="menu"><a href="#" class="menu">${country}</a></li>
-                <li class="menu"><a href="#" class="menu">${myTweets}</a></li>
+                <li class="menu"><a class="menu" onclick="getMyTweets()">${myTweets}</a></li>
             </ul>
         </div>
     </div>

@@ -11,6 +11,12 @@ function getSubscriptionTweets() {
     })
 }
 
+function getMyTweets() {
+    $.post("GetMyTweets", function (response) {
+        $('#content').html(response);
+    })
+}
+
 function newTweet() {
     var tweetText = $('#tweet').val();
     $.post("NewTweet", {
