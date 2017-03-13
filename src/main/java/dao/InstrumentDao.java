@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface InstrumentDao {
 
-    long createInstruments(Instrument[] instruments);
+    long createInstruments(List<Instrument> instruments);
 
     Instrument readInstrument(long instrumentId);
 
@@ -20,4 +20,7 @@ public interface InstrumentDao {
 
     List<Instrument> getUserInstruments(long userId);
 
+    List<Instrument> getAllInstruments();
+
+    int setInstrumentsToUser(long userId, String[] instruments) throws SQLException;
 }

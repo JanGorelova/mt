@@ -52,7 +52,7 @@ public class H2MessageDao implements MessageDao {
                     "ON (ui1.user_id = m.user_id) " +
                     "INNER JOIN Users_Instruments AS ui2 " +
                     "ON (ui1.instrument_id = ui2.instrument_id) " +
-                    "WHERE ui2.user_id = ? ORDER BY m.message_date DESC;";
+                    "WHERE ui2.user_id = ? GROUP BY m.message_id ORDER BY m.message_date DESC;";
 
     private final String GET_COUNTRY_MESSAGES_SQL =
             "SELECT m.message_id, m.user_id, m.message_date, m.message_text, u1.login, " +

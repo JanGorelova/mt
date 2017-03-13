@@ -30,6 +30,7 @@
     <fmt:message bundle="${loc}" key="invalidPassword" var="invalid_password"/>
     <fmt:message bundle="${loc}" key="invalidPasswordRepeat" var="invalid_password_repeat"/>
     <fmt:message bundle="${loc}" key="loginExists" var="login_exists"/>
+    <meta charset="utf-8" />
     <title>${register_title}</title>
 </head>
 <body>

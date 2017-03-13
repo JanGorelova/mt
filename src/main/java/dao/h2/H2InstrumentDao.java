@@ -17,9 +17,11 @@ public class H2InstrumentDao implements InstrumentDao {
 
     private DataSource dataSource;
 
-    private final String CREATE_INSTRUMENT_SQL = "INSERT INTO Instruments (instrument_name) VALUES (?);";
+    private final String CREATE_INSTRUMENT_SQL = "INSERT INTO Instruments (instrument_name) VALUES (?) ;";
 
     private final String READ_INSTRUMENT_SQL = "SELECT instrument_name FROM Instruments WHERE instrument_id = ?";
+
+    private final String GET_ALL_INSTRUMENTS_SQL = "SELECT instrument_id, instrument_name FROM Instruments;";
 
     private final String GET_USER_INSTRUMENTS_SQL =
             "SELECT i.instrument_id, i.instrument_name " +
@@ -27,16 +29,20 @@ public class H2InstrumentDao implements InstrumentDao {
                     "ON i.instrument_id = u.instrument_id " +
                     "WHERE u.user_id = ?";
 
+    private final String SET_INSTRUMENTS_TO_USER_SQL =
+            "INSERT INTO Users_Instruments (user_id, instrument_id) " +
+                    "VALUES (?, (SELECT instrument_id FROM Instruments WHERE instrument_name = ?))";
+
     public H2InstrumentDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     @Override
-    public long createInstruments(Instrument[] instruments) {
+    public long createInstruments(List<Instrument> instruments) {
         int[] result = {0};
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(CREATE_INSTRUMENT_SQL)) {
             for (Instrument instrument: instruments) {
-                statement.setString(1, instrument.getInstrumentName());
+                statement.setString(1, instrument.getInstrumentName().trim().toLowerCase());
                 statement.addBatch();
             }
             result = statement.executeBatch();
@@ -89,5 +95,35 @@ public class H2InstrumentDao implements InstrumentDao {
             System.out.println("getUserInstruments() - " + e.getMessage());
         }
         return instruments;
+    }
+
+    @Override
+    public List<Instrument> getAllInstruments() {
+        List<Instrument> instruments = new ArrayList<>();
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_ALL_INSTRUMENTS_SQL)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Instrument instrument = new Instrument();
+                    instrument.setInstrumentId(resultSet.getLong("instrument_id"));
+                    instrument.setInstrumentName(resultSet.getString("instrument_name"));
+                    instruments.add(instrument);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("getAllInstruments() - " + e.getMessage());
+        }
+        return instruments;
+    }
+
+    @Override
+    public int setInstrumentsToUser(long userId, String[] instruments) throws SQLException {
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(SET_INSTRUMENTS_TO_USER_SQL)) {
+            for (String instrumentName: instruments) {
+                statement.setLong(1, userId);
+                statement.setString(2, instrumentName);
+                statement.addBatch();
+            }
+            return statement.executeBatch().length;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package controllers;
 
+import model.Subscription;
 import model.Tweet;
 
 import java.time.format.DateTimeFormatter;
@@ -28,9 +29,20 @@ class ProcessTweets {
 //        </div>
 //
 
-    static String process(List<Tweet> tweets, ResourceBundle bundle, DateTimeFormatter formatter) {
+    static String process(List<Tweet> tweets, List<Subscription> subscriptions, ResourceBundle bundle, DateTimeFormatter formatter) {
         StringBuilder out = new StringBuilder();
+        String subscribe;
+        String functionName;
         for (Tweet tweet : tweets) {
+            subscribe = bundle.getString("subscribe");
+            functionName = "subscribe";
+            for (Subscription subscription : subscriptions) {
+                if (subscription.getSubscriptedUserId() == tweet.getUserId()) {
+                    subscribe = bundle.getString("unsubscribe");
+                    functionName = "unsubscribe";
+                    break;
+                }
+            }
             out.append("<div class=\"singleTweet\" id=\"").append(tweet.getMessageId()).append("\">");
             out.append(" <div class=\"tweetPic\">");
             out.append("     <img src=\"/img/tweet_icon.png\" />");
@@ -43,7 +55,8 @@ class ProcessTweets {
             out.append("     <span class=\"tweetText\">").append(tweet.getMessageText()).append("</span><br>");
             out.append("     <span class=\"tweetLike\"><a href=\"javascript:likePressed(")
                     .append(tweet.getMessageId()).append(")\">").append(bundle.getString("like")).append("</a> (")
-                    .append(tweet.getLikes()).append("), <a href=\"#\">").append(bundle.getString("subscribe"))
+                    .append(tweet.getLikes()).append("), ")
+                    .append("<a href=\"javascript:").append(functionName).append("(").append(tweet.getUserId()).append(")\">").append(subscribe)
                     .append("</a></span>");
             out.append(" </div>");
             out.append("</div><div class=\"clear\"><hr></div>");

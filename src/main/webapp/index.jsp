@@ -18,6 +18,7 @@
     <fmt:message bundle="${loc}" key="login" var="login_msg"/>
     <fmt:message bundle="${loc}" key="register" var="register_msg"/>
     <fmt:message bundle="${loc}" key="welcomeFull" var="welcome_msg"/>
+    <meta charset="utf-8" />
     <title>${welcome_title}</title>
 </head>
 <body>

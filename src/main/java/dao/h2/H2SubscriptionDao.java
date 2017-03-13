@@ -19,10 +19,14 @@ public class H2SubscriptionDao implements SubscriptionDao {
 
     private DataSource dataSource;
 
-    private final String CREATE_SUBSCRIPTION_SQL = "INSERT INTO Subscriptions (user_id, subscripted_user_id) VALUES (?, ?);";
+    private final String CREATE_SUBSCRIPTION_SQL =
+            "INSERT INTO Subscriptions (user_id, subscripted_user_id) VALUES (?, ?);";
 
     private final String GET_USER_SUBSCRIPTIONS_SQL =
             "SELECT subscription_id, subscripted_user_id FROM Subscriptions WHERE user_id = ?";
+
+    private final String DELETE_SUBSCRIPTION_SQL =
+            "DELETE FROM Subscriptions WHERE (user_id = ? AND subscripted_user_id = ?);";
 
     public H2SubscriptionDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -34,6 +38,7 @@ public class H2SubscriptionDao implements SubscriptionDao {
                 .prepareStatement(CREATE_SUBSCRIPTION_SQL, Statement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, subscription.getUserId());
             statement.setLong(2, subscription.getSubscriptedUserId());
+            statement.executeUpdate();
             try (ResultSet resultSet = statement.getGeneratedKeys()) {
                 if (resultSet.next()) {
                     return resultSet.getLong(1);
@@ -56,8 +61,14 @@ public class H2SubscriptionDao implements SubscriptionDao {
     }
 
     @Override
-    public void deleteSubscription(Subscription subscription) throws SQLException {
-
+    public void deleteSubscription(Subscription subscription)  {
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(DELETE_SUBSCRIPTION_SQL)) {
+            statement.setLong(1, subscription.getUserId());
+            statement.setLong(2, subscription.getSubscriptedUserId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("deleteSubscription() - " + e.getMessage());
+        }
     }
 
     @Override

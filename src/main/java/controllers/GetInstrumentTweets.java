@@ -1,6 +1,7 @@
 package controllers;
 
 import dao.DaoFactory;
+import model.Subscription;
 import model.Tweet;
 import model.User;
 
@@ -23,20 +24,23 @@ import java.util.ResourceBundle;
 @WebServlet("/GetInstrumentTweets")
 public class GetInstrumentTweets extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         response.setContentType("text/html; charset=UTF-8");
-        Writer out = response.getWriter();
-        HttpSession session = request.getSession();
+        try (Writer out = response.getWriter()) {
+            HttpSession session = request.getSession();
 
-        User user = (User) session.getAttribute("User");
-        String localeString = (String) session.getAttribute("locale");
-        Locale locale = new Locale(localeString);
-        ResourceBundle bundle = ResourceBundle.getBundle("main", locale);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(locale);
+            User user = (User) session.getAttribute("User");
+            List<Subscription> subscriptions = (List<Subscription>) session.getAttribute("Subscriptions");
+            String localeString = (String) session.getAttribute("locale");
+            Locale locale = new Locale(localeString);
+            ResourceBundle bundle = ResourceBundle.getBundle("main", locale);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(locale);
 
-        DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
-        if (daoFactory != null && user != null) {
-            List<Tweet> tweets = daoFactory.getMessageDao().getInstrumentMessages(user.getUserId());
-            out.write(ProcessTweets.process(tweets, bundle, formatter));
+            DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
+            if (daoFactory != null && user != null) {
+                List<Tweet> tweets = daoFactory.getMessageDao().getInstrumentMessages(user.getUserId());
+                out.write(ProcessTweets.process(tweets, subscriptions, bundle, formatter));
+            }
         }
     }
 

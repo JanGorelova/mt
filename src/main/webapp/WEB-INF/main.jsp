@@ -29,6 +29,7 @@
     <script src="<c:url value="/js/jquery-3.1.1.min.js"/>" type="text/javascript"></script>
     <script src="<c:url value="/js/main.js" />" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="<c:url value = "/css/main.css" />"/>
+    <meta charset="utf-8" />
     <title>${sessionScope.User.login} - MusicTwitter</title>
 </head>
 

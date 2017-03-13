@@ -2,6 +2,7 @@ package controllers;
 
 import dao.DaoFactory;
 import model.Instrument;
+import model.Subscription;
 import model.Tweet;
 import model.User;
 
@@ -26,25 +27,27 @@ public class GetMyTweets extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html; charset=UTF-8");
-        Writer out = response.getWriter();
-        HttpSession session = request.getSession();
+        try (Writer out = response.getWriter()) {
+            HttpSession session = request.getSession();
 
-        User user = (User) session.getAttribute("User");
-        String localeString = (String) session.getAttribute("locale");
-        Locale locale = new Locale(localeString);
-        ResourceBundle bundle = ResourceBundle.getBundle("main", locale);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(locale);
-        DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
+            User user = (User) session.getAttribute("User");
+            List<Subscription> subscriptions = (List<Subscription>) session.getAttribute("Subscriptions");
+            String localeString = (String) session.getAttribute("locale");
+            Locale locale = new Locale(localeString);
+            ResourceBundle bundle = ResourceBundle.getBundle("main", locale);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(locale);
+            DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
 
-        if (daoFactory != null && user != null) {
-            List<Instrument> instrumentList = daoFactory.getInstrumentDao().getUserInstruments(user.getUserId());
-            StringBuilder instruments = new StringBuilder();
-            for (Instrument instrument : instrumentList) {
-                instruments.append(instrument.getInstrumentName()).append(", ");
+            if (daoFactory != null && user != null) {
+                List<Instrument> instrumentList = (List<Instrument>) session.getAttribute("Instruments");
+                StringBuilder instruments = new StringBuilder();
+                for (Instrument instrument : instrumentList) {
+                    instruments.append(instrument.getInstrumentName()).append(", ");
+                }
+                instruments.delete(instruments.length() - 2, instruments.length());
+                List<Tweet> tweets = daoFactory.getMessageDao().getUserMessages(user, instruments.toString());
+                out.write(ProcessTweets.process(tweets, subscriptions, bundle, formatter));
             }
-            instruments.delete(instruments.length() - 2, instruments.length());
-            List<Tweet> tweets = daoFactory.getMessageDao().getUserMessages(user, instruments.toString());
-            out.write(ProcessTweets.process(tweets, bundle, formatter));
         }
     }
 

@@ -2,6 +2,8 @@ package controllers;
 
 import dao.DaoFactory;
 import model.Countries;
+import model.Instrument;
+import model.Subscription;
 import model.User;
 
 import javax.servlet.ServletException;
@@ -9,7 +11,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -20,7 +26,9 @@ import java.util.ResourceBundle;
 public class RegisterUser extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String localeString = (String) request.getSession().getAttribute("locale");
+        HttpSession session = request.getSession();
+        request.setCharacterEncoding("utf-8");
+        String localeString = (String) session.getAttribute("locale");
         if (localeString == null) {
             localeString = "en";
         }
@@ -79,13 +87,18 @@ public class RegisterUser extends HttpServlet {
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setUserId(daoFactory.getUserDao().createUser(user));
-            if (instrument != null) {       // TODO do it
-
+            if (instrument != null) {
+                try {
+                    AddNewInstruments.addNewInstruments(instrument, daoFactory, session, user);
+                    session.setAttribute("Subscriptions", new ArrayList<Subscription>());
+                } catch (SQLException e) {
+                    request.setAttribute("invalidInstrument", bundle.getString("invalidInstrument"));
+                    request.getRequestDispatcher("/register.jsp").forward(request, response);
+                }
             }
-            request.getSession().setAttribute("User", user);
+            session.setAttribute("User", user);
             request.getRequestDispatcher("/WEB-INF/main.jsp").forward(request, response);
         }
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

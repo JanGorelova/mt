@@ -48,3 +48,19 @@ function likePressed(messageId) {
         getSubscriptionTweets();
     })
 }
+
+function subscribe(userId) {
+    $.post("SubscribePressed", {
+        userId: userId
+    }, function () {
+        getCountryTweets();
+    })
+}
+
+function unsubscribe(userId) {
+    $.post("UnsubscribePressed", {
+        userId: userId
+    }, function () {
+        getCountryTweets();
+    })
+}
