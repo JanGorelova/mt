@@ -39,6 +39,34 @@ public class H2MessageDao implements MessageDao {
                     "ON (m.user_id = u.user_id) " +
                     "WHERE s.user_id = ? ORDER BY m.message_date DESC;";
 
+    private final String GET_INSTRUMENT_MESSAGES_SQL =
+            "SELECT m.message_id, m.user_id, m.message_date, m.message_text, u.login, " +
+                    "(SELECT COUNT(like_id) FROM Likes WHERE Likes.message_id = m.message_id) AS like_count, " +
+                    "(SELECT GROUP_CONCAT(i.instrument_name SEPARATOR ', ') FROM Instruments AS i " +
+                    "INNER JOIN Users_Instruments AS ui ON i.instrument_id = ui.instrument_id " +
+                    "WHERE ui.user_id = m.user_id GROUP BY ui.user_id) AS instruments_string " +
+                    "FROM Messages AS m " +
+                    "INNER JOIN Users as u " +
+                    "ON m.user_id = u.user_id " +
+                    "INNER JOIN Users_Instruments as ui1 " +
+                    "ON (ui1.user_id = m.user_id) " +
+                    "INNER JOIN Users_Instruments AS ui2 " +
+                    "ON (ui1.instrument_id = ui2.instrument_id) " +
+                    "WHERE ui2.user_id = ? ORDER BY m.message_date DESC;";
+
+    private final String GET_COUNTRY_MESSAGES_SQL =
+            "SELECT m.message_id, m.user_id, m.message_date, m.message_text, u1.login, " +
+                    "(SELECT COUNT(like_id) FROM Likes WHERE Likes.message_id = m.message_id) AS like_count, " +
+                    "(SELECT GROUP_CONCAT(i.instrument_name SEPARATOR ', ') FROM Instruments AS i " +
+                    "INNER JOIN Users_Instruments AS ui ON i.instrument_id = ui.instrument_id " +
+                    "WHERE ui.user_id = m.user_id GROUP BY ui.user_id) AS instruments_string " +
+                    "FROM Messages AS m " +
+                    "INNER JOIN Users AS u1 " +
+                    "ON m.user_id = u1.user_id " +
+                    "INNER JOIN Users AS u2 " +
+                    "ON u1.country = u2.country " +
+                    "WHERE u2.user_id = ? ORDER BY m.message_date DESC;";
+
     public H2MessageDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -107,18 +135,7 @@ public class H2MessageDao implements MessageDao {
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_SUBSCRIPTION_MESSAGES_SQL)) {
             statement.setLong(1, userId);
             try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    Tweet tweet = new Tweet();
-                    tweet.setMessageId(resultSet.getLong("message_id"));
-                    tweet.setUserId(resultSet.getLong("user_id"));
-                    tweet.setMessageDate(resultSet.getTimestamp("message_date").toLocalDateTime());
-                    tweet.setMessageText(resultSet.getString("message_text"));
-                    tweet.setLogin(resultSet.getString("login"));
-                    tweet.setLikes(resultSet.getInt("like_count"));
-                    tweet.setInstruments(resultSet.getString("instruments_string") == null
-                            ? "" : resultSet.getString("instruments_string"));
-                    tweets.add(tweet);
-                }
+                getTweetsFromResultSet(resultSet, tweets);
             }
         } catch (SQLException e) {
             System.out.println("getSubscriptionMessages() - " + e.getMessage());
@@ -128,11 +145,44 @@ public class H2MessageDao implements MessageDao {
 
     @Override
     public List<Tweet> getInstrumentMessages(long userId) {
-        return null;
+        List<Tweet> tweets = new ArrayList<>();
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_INSTRUMENT_MESSAGES_SQL)) {
+            statement.setLong(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                getTweetsFromResultSet(resultSet, tweets);
+            }
+        } catch (SQLException e) {
+            System.out.println("getInstrumentMessages() - " + e.getMessage());
+        }
+        return tweets;
     }
 
     @Override
     public List<Tweet> getCountryMessages(long userId) {
-        return null;
+        List<Tweet> tweets = new ArrayList<>();
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_COUNTRY_MESSAGES_SQL)) {
+            statement.setLong(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                getTweetsFromResultSet(resultSet, tweets);
+            }
+        } catch (SQLException e) {
+            System.out.println("getCountryMessages() - " + e.getMessage());
+        }
+        return tweets;
+    }
+
+    private void getTweetsFromResultSet(ResultSet resultSet, List<Tweet> tweets) throws SQLException {
+        while (resultSet.next()) {
+            Tweet tweet = new Tweet();
+            tweet.setMessageId(resultSet.getLong("message_id"));
+            tweet.setUserId(resultSet.getLong("user_id"));
+            tweet.setMessageDate(resultSet.getTimestamp("message_date").toLocalDateTime());
+            tweet.setMessageText(resultSet.getString("message_text"));
+            tweet.setLogin(resultSet.getString("login"));
+            tweet.setLikes(resultSet.getInt("like_count"));
+            tweet.setInstruments(resultSet.getString("instruments_string") == null
+                    ? "" : resultSet.getString("instruments_string"));
+            tweets.add(tweet);
+        }
     }
 }

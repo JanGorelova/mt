@@ -79,7 +79,7 @@ public class RegisterUser extends HttpServlet {
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setUserId(daoFactory.getUserDao().createUser(user));
-            if (instrument != null) {
+            if (instrument != null) {       // TODO do it
 
             }
             request.getSession().setAttribute("User", user);

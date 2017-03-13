@@ -26,7 +26,7 @@
     <fmt:message bundle="${loc}" key="subscribe" var="subscribe"/>
     <fmt:message bundle="${loc}" key="subscriptions" var="subscriptions"/>
 
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <script src="<c:url value="/js/jquery-3.1.1.min.js"/>" type="text/javascript"></script>
     <script src="<c:url value="/js/main.js" />" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="<c:url value = "/css/main.css" />"/>
     <title>${sessionScope.User.login} - MusicTwitter</title>
@@ -41,8 +41,8 @@
         <div id="menu">
             <ul class="menu">
                 <li class="menu"><a class="menu" onclick="getSubscriptionTweets()">${subscriptions}</a></li>
-                <li class="menu"><a href="#" class="menu">${instruments}</a></li>
-                <li class="menu"><a href="#" class="menu">${country}</a></li>
+                <li class="menu"><a class="menu" onclick="getInstrumentTweets()">${instruments}</a></li>
+                <li class="menu"><a class="menu" onclick="getCountryTweets()">${country}</a></li>
                 <li class="menu"><a class="menu" onclick="getMyTweets()">${myTweets}</a></li>
             </ul>
         </div>

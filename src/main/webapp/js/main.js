@@ -17,6 +17,18 @@ function getMyTweets() {
     })
 }
 
+function getInstrumentTweets() {
+    $.post("GetInstrumentTweets", function (response) {
+        $('#content').html(response);
+    })
+}
+
+function getCountryTweets() {
+    $.post("GetCountryTweets", function (response) {
+        $('#content').html(response);
+    })
+}
+
 function newTweet() {
     var tweetText = $('#tweet').val();
     $.post("NewTweet", {

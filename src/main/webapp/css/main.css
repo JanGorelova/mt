@@ -87,6 +87,7 @@ a.menu:hover {
     float: left;
     width: 250px;
     min-height: 600px;
+    height: inherit;
     margin-bottom: 10px;
     margin-top: 10px;
     margin-right: 5px;

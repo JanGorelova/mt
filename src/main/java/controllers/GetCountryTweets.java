@@ -18,12 +18,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Created by iMac on 10/03/17.
+ * Created by iMac on 13/03/17.
  */
-@WebServlet("/GetSubscriptions")
-public class GetSubscriptions extends HttpServlet {
+@WebServlet("/GetCountryTweets")
+public class GetCountryTweets extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         response.setContentType("text/html; charset=UTF-8");
         Writer out = response.getWriter();
         HttpSession session = request.getSession();
@@ -36,7 +35,7 @@ public class GetSubscriptions extends HttpServlet {
 
         DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
         if (daoFactory != null && user != null) {
-            List<Tweet> tweets = daoFactory.getMessageDao().getSubscriptionMessages(user.getUserId());
+            List<Tweet> tweets = daoFactory.getMessageDao().getCountryMessages(user.getUserId());
             out.write(ProcessTweets.process(tweets, bundle, formatter));
         }
     }
