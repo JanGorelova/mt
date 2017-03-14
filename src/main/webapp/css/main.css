@@ -64,14 +64,13 @@ a.menu {
     color: #22aaff;
     padding: 0px 25px;
     font-family: arial, serif;
-    line-height: 55px;
+    line-height: 50px;
     display: block;
 }
 
 a.menu:hover {
-    background: #22aaff;
-    color: white;
     cursor: pointer;
+    border-bottom: solid 5px #22aaff;
 }
 
 #container {

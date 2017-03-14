@@ -41,10 +41,10 @@
         </div>
         <div id="menu">
             <ul class="menu">
-                <li class="menu"><a class="menu" onclick="getSubscriptionTweets()">${subscriptions}</a></li>
-                <li class="menu"><a class="menu" onclick="getInstrumentTweets()">${instruments}</a></li>
-                <li class="menu"><a class="menu" onclick="getCountryTweets()">${country}</a></li>
-                <li class="menu"><a class="menu" onclick="getMyTweets()">${myTweets}</a></li>
+                <li class="menu"><a class="menu" id="subscriptionMenu" onclick="getSubscriptionTweets()">${subscriptions}</a></li>
+                <li class="menu"><a class="menu" id="instrumentMenu" onclick="getInstrumentTweets()">${instruments}</a></li>
+                <li class="menu"><a class="menu" id="countryMenu" onclick="getCountryTweets()">${country}</a></li>
+                <li class="menu"><a class="menu" id="myTweetsMenu" onclick="getMyTweets()">${myTweets}</a></li>
             </ul>
         </div>
     </div>

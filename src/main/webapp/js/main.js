@@ -5,28 +5,47 @@ $(document).ready(function () {
     getSubscriptionTweets();
 });
 
+var currentPage = 'getSubscriptionTweets';
+
+function refreshCurrentPage() {
+    window[currentPage]();
+}
+
 function getSubscriptionTweets() {
     $.post("GetSubscriptions", function (response) {
         $('#content').html(response);
-    })
+    });
+    changeSelectedMenuItem('subscriptionMenu');
+    currentPage = 'getSubscriptionTweets';
 }
 
 function getMyTweets() {
     $.post("GetMyTweets", function (response) {
         $('#content').html(response);
-    })
+    });
+    changeSelectedMenuItem('myTweetsMenu');
+    currentPage = 'getMyTweets';
 }
 
 function getInstrumentTweets() {
     $.post("GetInstrumentTweets", function (response) {
         $('#content').html(response);
-    })
+    });
+    changeSelectedMenuItem('instrumentMenu');
+    currentPage = 'getInstrumentTweets';
 }
 
 function getCountryTweets() {
     $.post("GetCountryTweets", function (response) {
         $('#content').html(response);
-    })
+    });
+    changeSelectedMenuItem('countryMenu');
+    currentPage = 'getCountryTweets';
+}
+
+function changeSelectedMenuItem(item) {
+    $('a.menu').css('border', '');
+    $('#' + item).css('border-bottom', 'solid 5px #22aaff');
 }
 
 function newTweet() {
@@ -36,7 +55,7 @@ function newTweet() {
     }, function (response) {
         if (response.length > 0) {
             $('#tweet').val('');
-            getSubscriptionTweets();
+            getMyTweets();
         }
     })
 }
@@ -45,7 +64,7 @@ function likePressed(messageId) {
     $.post("LikePressed", {
         messageId: messageId
     }, function () {
-        getSubscriptionTweets();
+        refreshCurrentPage();
     })
 }
 
@@ -53,7 +72,7 @@ function subscribe(userId) {
     $.post("SubscribePressed", {
         userId: userId
     }, function () {
-        getCountryTweets();
+        refreshCurrentPage();
     })
 }
 
@@ -61,6 +80,6 @@ function unsubscribe(userId) {
     $.post("UnsubscribePressed", {
         userId: userId
     }, function () {
-        getCountryTweets();
+        refreshCurrentPage();
     })
 }
