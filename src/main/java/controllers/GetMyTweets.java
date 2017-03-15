@@ -37,14 +37,14 @@ public class GetMyTweets extends HttpServlet {
             String pageCountString = request.getParameter("pageCount");
             String resetLimit = request.getParameter("resetLimit");
             int limit = 20;
-            int offset = 1;
+            int offset = 0;
             if (pageCountString != null && !pageCountString.isEmpty()) {
                 int pageCount = Integer.parseInt(pageCountString);
-                offset = pageCount * limit + 1;
+                offset = pageCount * limit;
             }
             if (resetLimit != null) {
-                limit = offset - 1;
-                offset = 1;
+                limit = offset;
+                offset = 0;
             }
 
             String localeString = (String) session.getAttribute("locale");
