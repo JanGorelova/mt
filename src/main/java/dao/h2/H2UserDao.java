@@ -29,7 +29,8 @@ public class H2UserDao implements UserDao {
 
     @Override
     public long createUser(User user) {
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(CREATE_USER_SQL,
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(CREATE_USER_SQL,
                 Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, user.getLogin());
             statement.setString(2, user.getPassword());

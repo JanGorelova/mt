@@ -35,8 +35,8 @@ public class DatabaseInitListener implements ServletContextListener {
         System.out.println("Database initialization...");
         Pattern pattern = Pattern.compile("^\\d+\\.sql$");
         Path sqlPath = Paths.get(sce.getServletContext().getRealPath("/WEB-INF/classes/sql"));
-        try (Connection connection = dataSource.getConnection()) {
-            Statement statement = connection.createStatement();
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
             DirectoryStream<Path> paths = Files.newDirectoryStream(sqlPath);
             for (Path filePath : paths) {
                 if (pattern.matcher(filePath.toFile().getName()).find()) {

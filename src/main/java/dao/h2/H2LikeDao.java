@@ -5,10 +5,7 @@ import model.Like;
 import model.User;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 /**
@@ -32,8 +29,8 @@ public class H2LikeDao implements LikeDao {
 
     @Override
     public long createLike(Like like) {
-        try (PreparedStatement statement = dataSource.getConnection()
-                .prepareStatement(CREATE_LIKE_SQL, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(CREATE_LIKE_SQL, Statement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, like.getUserId());
             statement.setLong(2, like.getMessageId());
             statement.executeUpdate();
@@ -65,7 +62,8 @@ public class H2LikeDao implements LikeDao {
 
     @Override
     public long getLikeId(Like like) throws SQLException {
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_LIKE_ID_SQL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_LIKE_ID_SQL)) {
             statement.setLong(1, like.getUserId());
             statement.setLong(2, like.getMessageId());
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -79,7 +77,8 @@ public class H2LikeDao implements LikeDao {
 
     @Override
     public void deleteLike(long likeId) {
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(DELETE_LIKE_SQL)){
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_LIKE_SQL)) {
             statement.setLong(1, likeId);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -89,7 +88,8 @@ public class H2LikeDao implements LikeDao {
 
     @Override
     public int getLikeCount(long messageId) {
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_LIKE_COUNT_SQL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_LIKE_COUNT_SQL)) {
             statement.setLong(1, messageId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {

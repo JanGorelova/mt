@@ -73,8 +73,8 @@ public class H2MessageDao implements MessageDao {
 
     @Override
     public long createMessage(Message message) {
-        try (PreparedStatement statement = dataSource.getConnection()
-                .prepareStatement(CREATE_MESSAGE_SQL, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(CREATE_MESSAGE_SQL, Statement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, message.getUserId());
             statement.setTimestamp(2, Timestamp.valueOf(message.getMessageDate()));
             statement.setString(3, message.getMessageText());
@@ -108,7 +108,8 @@ public class H2MessageDao implements MessageDao {
     @Override
     public List<Tweet> getUserMessages(User user, String instruments, int limit, int offset) {
         List<Tweet> tweets = new ArrayList<>();
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_USER_MESSAGES_SQL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_USER_MESSAGES_SQL)) {
             statement.setLong(1, user.getUserId());
             statement.setInt(2, limit);
             statement.setInt(3, offset);
@@ -134,7 +135,8 @@ public class H2MessageDao implements MessageDao {
     @Override
     public List<Tweet> getSubscriptionMessages(long userId, int limit, int offset) {
         List<Tweet> tweets = new ArrayList<>();
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_SUBSCRIPTION_MESSAGES_SQL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_SUBSCRIPTION_MESSAGES_SQL)) {
             statement.setLong(1, userId);
             statement.setInt(2, limit);
             statement.setInt(3, offset);
@@ -150,7 +152,8 @@ public class H2MessageDao implements MessageDao {
     @Override
     public List<Tweet> getInstrumentMessages(long userId, int limit, int offset) {
         List<Tweet> tweets = new ArrayList<>();
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_INSTRUMENT_MESSAGES_SQL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_INSTRUMENT_MESSAGES_SQL)) {
             statement.setLong(1, userId);
             statement.setInt(2, limit);
             statement.setInt(3, offset);
@@ -166,7 +169,8 @@ public class H2MessageDao implements MessageDao {
     @Override
     public List<Tweet> getCountryMessages(long userId, int limit, int offset) {
         List<Tweet> tweets = new ArrayList<>();
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_COUNTRY_MESSAGES_SQL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_COUNTRY_MESSAGES_SQL)) {
             statement.setLong(1, userId);
             statement.setInt(2, limit);
             statement.setInt(3, offset);

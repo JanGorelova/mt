@@ -4,6 +4,7 @@ import dao.InstrumentDao;
 import model.Instrument;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,8 +41,10 @@ public class H2InstrumentDao implements InstrumentDao {
     @Override
     public long createInstruments(List<Instrument> instruments) {
         int[] result = {0};
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(CREATE_INSTRUMENT_SQL)) {
-            for (Instrument instrument: instruments) {
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(CREATE_INSTRUMENT_SQL)) {
+            for (Instrument instrument : instruments) {
                 statement.setString(1, instrument.getInstrumentName().trim().toLowerCase());
                 statement.addBatch();
             }
@@ -55,7 +58,8 @@ public class H2InstrumentDao implements InstrumentDao {
     @Override
     public Instrument readInstrument(long instrumentId) {
         Instrument instrument = new Instrument();
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(READ_INSTRUMENT_SQL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(READ_INSTRUMENT_SQL)) {
             statement.setLong(1, instrumentId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
@@ -81,7 +85,8 @@ public class H2InstrumentDao implements InstrumentDao {
     @Override
     public List<Instrument> getUserInstruments(long userId) {
         List<Instrument> instruments = new ArrayList<>();
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_USER_INSTRUMENTS_SQL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_USER_INSTRUMENTS_SQL)) {
             statement.setLong(1, userId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -100,7 +105,8 @@ public class H2InstrumentDao implements InstrumentDao {
     @Override
     public List<Instrument> getAllInstruments() {
         List<Instrument> instruments = new ArrayList<>();
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_ALL_INSTRUMENTS_SQL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_ALL_INSTRUMENTS_SQL)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     Instrument instrument = new Instrument();
@@ -117,8 +123,9 @@ public class H2InstrumentDao implements InstrumentDao {
 
     @Override
     public int setInstrumentsToUser(long userId, String[] instruments) throws SQLException {
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(SET_INSTRUMENTS_TO_USER_SQL)) {
-            for (String instrumentName: instruments) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SET_INSTRUMENTS_TO_USER_SQL)) {
+            for (String instrumentName : instruments) {
                 statement.setLong(1, userId);
                 statement.setString(2, instrumentName);
                 statement.addBatch();

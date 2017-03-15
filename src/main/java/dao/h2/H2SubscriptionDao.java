@@ -5,10 +5,7 @@ import model.Instrument;
 import model.Subscription;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +31,8 @@ public class H2SubscriptionDao implements SubscriptionDao {
 
     @Override
     public long createSubscription(Subscription subscription) {
-        try (PreparedStatement statement = dataSource.getConnection()
-                .prepareStatement(CREATE_SUBSCRIPTION_SQL, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(CREATE_SUBSCRIPTION_SQL, Statement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, subscription.getUserId());
             statement.setLong(2, subscription.getSubscriptedUserId());
             statement.executeUpdate();
@@ -62,7 +59,8 @@ public class H2SubscriptionDao implements SubscriptionDao {
 
     @Override
     public void deleteSubscription(Subscription subscription)  {
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(DELETE_SUBSCRIPTION_SQL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_SUBSCRIPTION_SQL)) {
             statement.setLong(1, subscription.getUserId());
             statement.setLong(2, subscription.getSubscriptedUserId());
             statement.executeUpdate();
@@ -74,7 +72,8 @@ public class H2SubscriptionDao implements SubscriptionDao {
     @Override
     public List<Subscription> getUserSubscriptions(long userId) {
         List<Subscription> subscriptions = new ArrayList<>();
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_USER_SUBSCRIPTIONS_SQL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_USER_SUBSCRIPTIONS_SQL)) {
             statement.setLong(1, userId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
