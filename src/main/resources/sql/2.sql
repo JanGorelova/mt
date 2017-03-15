@@ -30,7 +30,6 @@ INSERT INTO Messages (user_id, message_date, message_text) VALUES (2, '2010-01-0
 INSERT INTO Messages (user_id, message_date, message_text) VALUES (2, '2011-02-01', 'Second tweet! Nice service you''ve got here');
 INSERT INTO Messages (user_id, message_date, message_text) VALUES (3, '2012-03-07', 'What''s up?');
 INSERT INTO Messages (user_id, message_date, message_text) VALUES (4, '2013-04-07', 'What''s up? What''s up? What''s up?');
-INSERT INTO Messages (user_id, message_date, message_text) VALUES (1, '2014-04-07', 'Admin first tweet');
 INSERT INTO Messages (user_id, message_date, message_text) VALUES (5, '2015-04-07', 'This is Ringo!');
 INSERT INTO Messages (user_id, message_date, message_text) VALUES (5, '2015-04-08', 'All you need is love!');
 INSERT INTO Messages (user_id, message_date, message_text) VALUES (3, '2017-03-08', 'All you need is peace!');

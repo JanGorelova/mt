@@ -20,12 +20,12 @@ public interface MessageDao {
 
     void deleteMessage(long messageId) throws SQLException;
 
-    List<Tweet> getUserMessages(User user, String instruments);
+    List<Tweet> getUserMessages(User user, String instruments, int limit, int offset);
 
-    List<Tweet> getSubscriptionMessages(long userId);
+    List<Tweet> getSubscriptionMessages(long userId, int limit, int offset);
 
-    List<Tweet> getInstrumentMessages(long userId);
+    List<Tweet> getInstrumentMessages(long userId, int limit, int offset);
 
-    List<Tweet> getCountryMessages(long userId);
+    List<Tweet> getCountryMessages(long userId, int limit, int offset);
 
 }

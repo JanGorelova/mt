@@ -49,7 +49,8 @@ class ProcessTweets {
             out.append(" </div>");
 
             out.append(" <div class=\"tweetContent\">");
-            out.append("     <span class=\"tweetUser\" id=\"").append(tweet.getUserId()).append("\">").append(tweet.getLogin()).append("</span>");
+            out.append("     <span class=\"tweetUser\" id=\"").append(tweet.getUserId()).append("\">")
+                    .append(tweet.getLogin()).append("</span>");
             out.append("     <span class=\"tweetInstrument\">").append(tweet.getInstruments()).append("</span>");
             out.append("     <span class=\"tweetDate\"> - ").append(tweet.getMessageDate().format(formatter)).append("</span><br>");
             out.append("     <span class=\"tweetText\">").append(tweet.getMessageText()).append("</span><br>");
@@ -60,6 +61,11 @@ class ProcessTweets {
                     .append("</a></span>");
             out.append(" </div>");
             out.append("</div><div class=\"clear\"><hr></div>");
+        }
+        if (tweets.size() / 20 > 0) {
+            out.append("  <span><a id=\"next\" onclick=\"getNextTweets()\">")
+                    .append(bundle.getString("next"))
+                    .append("</span>");
         }
         return out.toString();
     }

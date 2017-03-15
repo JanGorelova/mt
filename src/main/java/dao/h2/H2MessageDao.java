@@ -24,7 +24,7 @@ public class H2MessageDao implements MessageDao {
     private final String GET_USER_MESSAGES_SQL =
             "SELECT message_id, message_date, message_text, " +
                     "(SELECT COUNT(like_id) FROM Likes WHERE Likes.message_id = m.message_id) AS like_count " +
-                    "FROM Messages AS m WHERE user_id = ? ORDER BY m.message_date DESC;";
+                    "FROM Messages AS m WHERE user_id = ? ORDER BY m.message_date DESC LIMIT ? OFFSET ?;";
 
     private final String GET_SUBSCRIPTION_MESSAGES_SQL =
             "SELECT m.message_id, m.user_id, m.message_date, m.message_text, u.login, " +
@@ -37,7 +37,7 @@ public class H2MessageDao implements MessageDao {
                     "ON (s.subscripted_user_id = m.user_id) " +
                     "INNER JOIN Users AS u " +
                     "ON (m.user_id = u.user_id) " +
-                    "WHERE s.user_id = ? ORDER BY m.message_date DESC;";
+                    "WHERE s.user_id = ? ORDER BY m.message_date DESC LIMIT ? OFFSET ?;";
 
     private final String GET_INSTRUMENT_MESSAGES_SQL =
             "SELECT m.message_id, m.user_id, m.message_date, m.message_text, u.login, " +
@@ -46,13 +46,13 @@ public class H2MessageDao implements MessageDao {
                     "INNER JOIN Users_Instruments AS ui ON i.instrument_id = ui.instrument_id " +
                     "WHERE ui.user_id = m.user_id GROUP BY ui.user_id) AS instruments_string " +
                     "FROM Messages AS m " +
-                    "INNER JOIN Users as u " +
+                    "INNER JOIN Users AS u " +
                     "ON m.user_id = u.user_id " +
-                    "INNER JOIN Users_Instruments as ui1 " +
+                    "INNER JOIN Users_Instruments AS ui1 " +
                     "ON (ui1.user_id = m.user_id) " +
                     "INNER JOIN Users_Instruments AS ui2 " +
                     "ON (ui1.instrument_id = ui2.instrument_id) " +
-                    "WHERE ui2.user_id = ? GROUP BY m.message_id ORDER BY m.message_date DESC;";
+                    "WHERE ui2.user_id = ? GROUP BY m.message_id ORDER BY m.message_date DESC LIMIT ? OFFSET ?;";
 
     private final String GET_COUNTRY_MESSAGES_SQL =
             "SELECT m.message_id, m.user_id, m.message_date, m.message_text, u1.login, " +
@@ -65,7 +65,7 @@ public class H2MessageDao implements MessageDao {
                     "ON m.user_id = u1.user_id " +
                     "INNER JOIN Users AS u2 " +
                     "ON u1.country = u2.country " +
-                    "WHERE u2.user_id = ? ORDER BY m.message_date DESC;";
+                    "WHERE u2.user_id = ? ORDER BY m.message_date DESC LIMIT ? OFFSET ?;";
 
     public H2MessageDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -106,10 +106,12 @@ public class H2MessageDao implements MessageDao {
     }
 
     @Override
-    public List<Tweet> getUserMessages(User user, String instruments) {
+    public List<Tweet> getUserMessages(User user, String instruments, int limit, int offset) {
         List<Tweet> tweets = new ArrayList<>();
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_USER_MESSAGES_SQL)) {
             statement.setLong(1, user.getUserId());
+            statement.setInt(2, limit);
+            statement.setInt(3, offset);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     Tweet tweet = new Tweet();
@@ -130,10 +132,12 @@ public class H2MessageDao implements MessageDao {
     }
 
     @Override
-    public List<Tweet> getSubscriptionMessages(long userId) {
+    public List<Tweet> getSubscriptionMessages(long userId, int limit, int offset) {
         List<Tweet> tweets = new ArrayList<>();
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_SUBSCRIPTION_MESSAGES_SQL)) {
             statement.setLong(1, userId);
+            statement.setInt(2, limit);
+            statement.setInt(3, offset);
             try (ResultSet resultSet = statement.executeQuery()) {
                 getTweetsFromResultSet(resultSet, tweets);
             }
@@ -144,10 +148,12 @@ public class H2MessageDao implements MessageDao {
     }
 
     @Override
-    public List<Tweet> getInstrumentMessages(long userId) {
+    public List<Tweet> getInstrumentMessages(long userId, int limit, int offset) {
         List<Tweet> tweets = new ArrayList<>();
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_INSTRUMENT_MESSAGES_SQL)) {
             statement.setLong(1, userId);
+            statement.setInt(2, limit);
+            statement.setInt(3, offset);
             try (ResultSet resultSet = statement.executeQuery()) {
                 getTweetsFromResultSet(resultSet, tweets);
             }
@@ -158,10 +164,12 @@ public class H2MessageDao implements MessageDao {
     }
 
     @Override
-    public List<Tweet> getCountryMessages(long userId) {
+    public List<Tweet> getCountryMessages(long userId, int limit, int offset) {
         List<Tweet> tweets = new ArrayList<>();
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(GET_COUNTRY_MESSAGES_SQL)) {
             statement.setLong(1, userId);
+            statement.setInt(2, limit);
+            statement.setInt(3, offset);
             try (ResultSet resultSet = statement.executeQuery()) {
                 getTweetsFromResultSet(resultSet, tweets);
             }

@@ -6,12 +6,94 @@ $(document).ready(function () {
 });
 
 var currentPage = 'getSubscriptionTweets';
+var pageCount = 1;
 
 function refreshCurrentPage() {
     window[currentPage]();
 }
 
+function getNextTweets() {
+    switch (currentPage) {
+        case "getSubscriptionTweets":
+            $.post("GetSubscriptions", {
+                pageCount: pageCount
+            }, function (response) {
+                $('#next').remove();
+                $('#content').append(response);
+            });
+            break;
+        case "getMyTweets":
+            $.post("GetMyTweets", {
+                pageCount: pageCount
+            }, function (response) {
+                $('#next').remove();
+                $('#content').append(response);
+            });
+            break;
+        case "getInstrumentTweets":
+            $.post("GetInstrumentTweets", {
+                pageCount: pageCount
+            }, function (response) {
+                $('#next').remove();
+                $('#content').append(response);
+            });
+            break;
+        case "getCountryTweets":
+            $.post("GetCountryTweets", {
+                pageCount: pageCount
+            }, function (response) {
+                $('#next').remove();
+                $('#content').append(response);
+            });
+            break;
+    }
+    pageCount++;
+}
+
+function getTweetsWithoutOffset() {
+    switch (currentPage) {
+        case "getSubscriptionTweets":
+            $.post("GetSubscriptions", {
+                pageCount: pageCount,
+                resetLimit: currentPage
+            }, function (response) {
+                $('#content').html(response);
+            });
+            break;
+        case "getMyTweets":
+            $.post("GetMyTweets", {
+                pageCount: pageCount,
+                resetLimit: currentPage
+            }, function (response) {
+                $('#content').html(response);
+            });
+            break;
+        case "getInstrumentTweets":
+            $.post("GetInstrumentTweets", {
+                pageCount: pageCount,
+                resetLimit: currentPage
+            }, function (response) {
+                $('#content').html(response);
+            });
+            break;
+        case "getCountryTweets":
+            $.post("GetCountryTweets", {
+                pageCount: pageCount,
+                resetLimit: currentPage
+            }, function (response) {
+                $('#content').html(response);
+            });
+            break;
+    }
+}
+
+function addNextTweets(response) {
+    $('.next').remove();
+    $('#content').append(response);
+}
+
 function getSubscriptionTweets() {
+    resetPageCount();
     $.post("GetSubscriptions", function (response) {
         $('#content').html(response);
     });
@@ -20,6 +102,7 @@ function getSubscriptionTweets() {
 }
 
 function getMyTweets() {
+    resetPageCount();
     $.post("GetMyTweets", function (response) {
         $('#content').html(response);
     });
@@ -28,6 +111,7 @@ function getMyTweets() {
 }
 
 function getInstrumentTweets() {
+    resetPageCount();
     $.post("GetInstrumentTweets", function (response) {
         $('#content').html(response);
     });
@@ -36,6 +120,7 @@ function getInstrumentTweets() {
 }
 
 function getCountryTweets() {
+    resetPageCount();
     $.post("GetCountryTweets", function (response) {
         $('#content').html(response);
     });
@@ -64,7 +149,7 @@ function likePressed(messageId) {
     $.post("LikePressed", {
         messageId: messageId
     }, function () {
-        refreshCurrentPage();
+        getTweetsWithoutOffset();
     })
 }
 
@@ -72,7 +157,7 @@ function subscribe(userId) {
     $.post("SubscribePressed", {
         userId: userId
     }, function () {
-        refreshCurrentPage();
+        getTweetsWithoutOffset();
     })
 }
 
@@ -80,6 +165,10 @@ function unsubscribe(userId) {
     $.post("UnsubscribePressed", {
         userId: userId
     }, function () {
-        refreshCurrentPage();
+        getTweetsWithoutOffset();
     })
+}
+
+function resetPageCount() {
+    pageCount = 1;
 }

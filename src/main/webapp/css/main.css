@@ -110,6 +110,21 @@ a.menu:hover {
     clear: both;
 }
 
+a#next {
+    background: white;
+    width: auto;
+    line-height: 40px;
+    color: #22aaff;
+    display: block;
+    margin: 5px;
+    padding: 0px 300px;
+}
+
+a#next:hover {
+    background: #d5ebf7;
+    cursor: pointer;
+}
+
 #footer {
     background: white;
     width: 100%;

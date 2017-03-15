@@ -31,6 +31,21 @@ public class GetInstrumentTweets extends HttpServlet {
 
             User user = (User) session.getAttribute("User");
             List<Subscription> subscriptions = (List<Subscription>) session.getAttribute("Subscriptions");
+
+            // Pagination
+            String pageCountString = request.getParameter("pageCount");
+            String resetLimit = request.getParameter("resetLimit");
+            int limit = 20;
+            int offset = 1;
+            if (pageCountString != null && !pageCountString.isEmpty()) {
+                int pageCount = Integer.parseInt(pageCountString);
+                offset = pageCount * limit + 1;
+            }
+            if (resetLimit != null) {
+                limit = offset - 1;
+                offset = 1;
+            }
+
             String localeString = (String) session.getAttribute("locale");
             Locale locale = new Locale(localeString);
             ResourceBundle bundle = ResourceBundle.getBundle("main", locale);
@@ -38,7 +53,7 @@ public class GetInstrumentTweets extends HttpServlet {
 
             DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
             if (daoFactory != null && user != null) {
-                List<Tweet> tweets = daoFactory.getMessageDao().getInstrumentMessages(user.getUserId());
+                List<Tweet> tweets = daoFactory.getMessageDao().getInstrumentMessages(user.getUserId(), limit, offset);
                 out.write(ProcessTweets.process(tweets, subscriptions, bundle, formatter));
             }
         }
