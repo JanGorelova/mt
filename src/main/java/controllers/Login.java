@@ -54,10 +54,9 @@ public class Login extends HttpServlet {
                     }
                 }
             }
-        } else {
-            request.setAttribute("loginError", bundle.getString("loginError"));
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
+        request.setAttribute("loginError", bundle.getString("loginError"));
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
