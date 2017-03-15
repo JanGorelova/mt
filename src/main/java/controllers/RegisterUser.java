@@ -27,7 +27,6 @@ public class RegisterUser extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        request.setCharacterEncoding("utf-8");
         String localeString = (String) session.getAttribute("locale");
         if (localeString == null) {
             localeString = "en";
