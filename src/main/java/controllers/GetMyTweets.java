@@ -60,7 +60,9 @@ public class GetMyTweets extends HttpServlet {
                 for (Instrument instrument : instrumentList) {
                     instruments.append(instrument.getInstrumentName()).append(", ");
                 }
-                instruments.delete(instruments.length() - 2, instruments.length());
+                if (instruments.length() > 2) {
+                    instruments.delete(instruments.length() - 2, instruments.length());
+                }
                 List<Tweet> tweets = daoFactory.getMessageDao().getUserMessages(user, instruments.toString(), limit, offset);
                 out.write(ProcessTweets.process(tweets, subscriptions, bundle, formatter));
             }
