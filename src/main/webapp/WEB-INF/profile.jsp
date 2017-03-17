@@ -16,7 +16,7 @@
 <fmt:message bundle="${loc}" key="profileTitle" var="profileTitle"/>
 
 <t:page title="${profileTitle}">
-        <jsp:attribute name="header">
+    <jsp:attribute name="header">
         <t:header/>
     </jsp:attribute>
 
@@ -27,7 +27,7 @@
     <jsp:body>
         <div>
             <h2>${profileTitle}</h2>
-            <t:profile actionLink="EditUser" cancelLink="/index.jsp" />
+            <t:profile actionLink="EditUser" cancelLink="/index.jsp"/>
         </div>
     </jsp:body>
 </t:page>

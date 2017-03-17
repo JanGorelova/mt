@@ -35,7 +35,7 @@ public class ShowProfile extends HttpServlet {
             for (Instrument instrument : instrumentList) {
                 instrumentsTemporary.append(instrument.getInstrumentName()).append(", ");
             }
-            request.setAttribute("instruments", instrumentsTemporary.toString());
+            request.setAttribute("instrument", instrumentsTemporary.toString());
             request.setAttribute("login", user.getLogin());
             request.setAttribute("firstName", user.getFirstName());
             request.setAttribute("lastName", user.getLastName());

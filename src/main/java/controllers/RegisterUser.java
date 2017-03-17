@@ -2,6 +2,7 @@ package controllers;
 
 import dao.DaoFactory;
 import model.Countries;
+import model.Instrument;
 import model.Subscription;
 import model.User;
 import services.AddNewInstruments;
@@ -54,13 +55,15 @@ public class RegisterUser extends HttpServlet {
             if (!instrument.isEmpty()) {
                 try {
                     AddNewInstruments.addNewInstruments(instrument, daoFactory, session, user);
-                    session.setAttribute("Subscriptions", new ArrayList<Subscription>());
                 } catch (SQLException e) {
                     request.setAttribute("invalidInstrument", bundle.getString("invalidInstrument"));
                     request.getRequestDispatcher("/register.jsp").forward(request, response);
                     return;
                 }
+            } else {
+                session.setAttribute("Instruments", new ArrayList<Instrument>());
             }
+            session.setAttribute("Subscriptions", new ArrayList<Subscription>());
             session.setAttribute("User", user);
             request.getRequestDispatcher("/WEB-INF/main.jsp").forward(request, response);
         }

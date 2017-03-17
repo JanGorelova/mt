@@ -89,9 +89,7 @@ public class H2UserDao implements UserDao {
                 user.setLogin(login);
             }
         } catch (SQLException e) {
-            if (!e.getMessage().equals("No data is available [2000-193]")) {
-                System.out.println("readUserByLogin() - " + e.getMessage());
-            }
+                System.out.println("Login is free: readUserByLogin() - " + e.getMessage());
             return null;
         }
         return user;

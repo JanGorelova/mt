@@ -101,7 +101,7 @@
                             ${input_instrument}
                         </span>
         </label>
-        <input class="profile" type="text" id="instrument" name="instrument" value="${requestScope.instruments}" placeholder="${placeholder_instrument}"/>
+        <input class="profile" type="text" id="instrument" name="instrument" value="${requestScope.instrument}" placeholder="${placeholder_instrument}"/>
         <span class="error">
                     <c:if test="${!empty requestScope.invalidInstrument}">
                         <br>${requestScope.invalidInstrument}

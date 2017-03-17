@@ -15,9 +15,19 @@ import java.sql.SQLException;
 public class H2DaoFactory implements DaoFactory {
 
     private final DataSource dataSource;
+    private final UserDao userDao;
+    private final InstrumentDao instrumentDao;
+    private final MessageDao messageDao;
+    private final SubscriptionDao subscriptionDao;
+    private final LikeDao likeDao;
 
     public H2DaoFactory(DataSource dataSource) {
         this.dataSource = dataSource;
+        userDao = new H2UserDao(dataSource);
+        instrumentDao = new H2InstrumentDao(dataSource);
+        messageDao = new H2MessageDao(dataSource);
+        subscriptionDao = new H2SubscriptionDao(dataSource);
+        likeDao = new H2LikeDao(dataSource);
     }
 
     @Override
@@ -27,31 +37,30 @@ public class H2DaoFactory implements DaoFactory {
 
     @Override
     public UserDao getUserDao() {
-        return new H2UserDao(dataSource);
+        return userDao;
     }
 
     @Override
     public InstrumentDao getInstrumentDao() {
-        return new H2InstrumentDao(dataSource);
+        return instrumentDao;
     }
 
     @Override
     public MessageDao getMessageDao() {
-        return new H2MessageDao(dataSource);
+        return messageDao;
     }
 
     @Override
     public SubscriptionDao getSubscriptionDao() {
-        return new H2SubscriptionDao(dataSource);
+        return subscriptionDao;
     }
 
     @Override
     public LikeDao getLikeDao() {
-        return new H2LikeDao(dataSource);
+        return likeDao;
     }
 
     @Override
     public void close() throws Exception {
-
     }
 }
