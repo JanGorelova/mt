@@ -18,6 +18,8 @@ public interface InstrumentDao {
 
     void deleteInstrument(long instrumentId) throws SQLException;
 
+    void deleteAllUserInstruments(long userId);
+
     List<Instrument> getUserInstruments(long userId);
 
     List<Instrument> getAllInstruments();

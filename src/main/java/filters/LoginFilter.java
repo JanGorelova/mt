@@ -9,8 +9,8 @@ import java.io.IOException;
 /**
  * Created by iMac on 08/03/17.
  */
-@WebFilter(urlPatterns = {"/index.jsp", "/WEB-INF/main.jsp"})
-public class loginFilter implements Filter {
+@WebFilter(urlPatterns = {"/index.jsp", "/register.jsp", "/WEB-INF/main.jsp"})
+public class LoginFilter implements Filter {
     public void destroy() {
     }
 
@@ -28,7 +28,7 @@ public class loginFilter implements Filter {
         }
         Object tempUser = session.getAttribute("User");
         if (tempUser == null) {
-            req.getRequestDispatcher("/index.jsp").forward(request, resp);
+            req.getRequestDispatcher(request.getRequestURI()).forward(request, resp);
         } else {
             req.getRequestDispatcher("/WEB-INF/main.jsp").forward(request, resp);
         }

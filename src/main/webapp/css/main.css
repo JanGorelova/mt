@@ -39,7 +39,6 @@ li.menu {
     height: 55px;
     color: black;
     border: 1px solid #22aaff;
-    float: left;
 }
 
 #logo {
@@ -85,20 +84,21 @@ a.menu:hover {
     background: #ffffff;
     float: left;
     width: 250px;
-    min-height: 600px;
+    min-height: 500px;
     height: inherit;
     margin-bottom: 10px;
     margin-top: 10px;
     margin-right: 5px;
     border: 1px solid #22aaff;
     border-radius: 8px;
+    padding-bottom: 15px;
 }
 
 #content {
     background: white;
     float: right;
     width: 760px;
-    min-height: 600px;
+    min-height: 515px;
     margin-bottom: 10px;
     margin-top: 10px;
     margin-left: 5px;
@@ -152,7 +152,7 @@ a#next:hover {
     text-align: left;
 }
 
-#login {
+#userLogin {
     text-align: left;
     font-size: x-large;
     font-family: serif;
@@ -189,7 +189,7 @@ a#next:hover {
     padding: 5px;
 }
 
-.button {
+button {
     width: 115px;
     color: #22aaff;
     text-align: center;
@@ -199,13 +199,13 @@ a#next:hover {
     outline: none;
 }
 
-.button:hover {
+button:hover {
     color: white;
     background: #22aaff;
     cursor: pointer;
 }
 
-.button:active {
+button:active {
     background: #0176ff;
 }
 
@@ -250,4 +250,51 @@ a#next:hover {
 .tweetLike {
     font-family: serif;
     font-size: small;
+}
+
+/* Login and register pages */
+
+h2 {
+    color: #22aaff;
+    text-align: center;
+}
+
+#menu {
+    color: #22aaff;
+    font-size: large;
+    float: left;
+}
+
+#body {
+    background: white;
+    min-height: 500px;
+    line-height: inherit;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border: 1px solid #22aaff;
+    border-radius: 8px;
+}
+
+form.profile {
+    margin: 0 auto;
+    width: 600px;
+    padding: 1em;
+    line-height: 30px;
+}
+
+label span {
+    display: inline-block;
+    width: 200px;
+    text-align: right;
+}
+
+.error {
+    font-size: small;
+    color: red;
+    text-align: right;
+}
+
+input.profile, select.profile {
+    width: 200px;
+    box-sizing: border-box;
 }

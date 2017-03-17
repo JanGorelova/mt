@@ -49,6 +49,7 @@ public class Login extends HttpServlet {
                             session.setAttribute("Subscriptions", subscriptions);
                             request.removeAttribute("loginError");
                             request.getRequestDispatcher("/WEB-INF/main.jsp").forward(request, response);
+                            return;
                         }
                     }
                 }

@@ -30,14 +30,14 @@ Login page
     <jsp:body>
         <div>
             <h2>${welcome_msg}</h2>
-            <form method="post" action="login">
+            <form class="profile" method="post" action="login">
                 <p>
                     <label for="login">
                         <span>
                             ${inputLogin}:
                         </span>
                     </label>
-                    <input type="text" id="login" name="login" placeholder="${login_placeholder_msg}">
+                    <input class="profile" type="text" id="login" name="login" placeholder="${login_placeholder_msg}">
                 </p>
                 <p>
                     <label for="password">
@@ -45,7 +45,7 @@ Login page
                             ${inputPassword}:
                         </span>
                     </label>
-                    <input type="password" id="password" name="password" placeholder="${password_placeholder_msg}">
+                    <input class="profile" type="password" id="password" name="password" placeholder="${password_placeholder_msg}">
                 </p>
                 <p>
                     <button type="submit">${login_msg}</button>

@@ -5,6 +5,7 @@ import model.Instrument;
 import model.Subscription;
 import model.Tweet;
 import model.User;
+import services.ProcessTweets;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

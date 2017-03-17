@@ -30,6 +30,8 @@ public class H2InstrumentDao implements InstrumentDao {
                     "ON i.instrument_id = u.instrument_id " +
                     "WHERE u.user_id = ?";
 
+    private final String DELETE_ALL_USER_INSTRUMENTS = "DELETE FROM Users_Instruments WHERE user_id = ?;";
+
     private final String SET_INSTRUMENTS_TO_USER_SQL =
             "INSERT INTO Users_Instruments (user_id, instrument_id) " +
                     "VALUES (?, (SELECT instrument_id FROM Instruments WHERE instrument_name = ?))";
@@ -125,12 +127,24 @@ public class H2InstrumentDao implements InstrumentDao {
     public int setInstrumentsToUser(long userId, String[] instruments) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SET_INSTRUMENTS_TO_USER_SQL)) {
+            deleteAllUserInstruments(userId);
             for (String instrumentName : instruments) {
                 statement.setLong(1, userId);
                 statement.setString(2, instrumentName);
                 statement.addBatch();
             }
             return statement.executeBatch().length;
+        }
+    }
+
+    @Override
+    public void deleteAllUserInstruments(long userId) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_ALL_USER_INSTRUMENTS)) {
+            statement.setLong(1, userId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("deleteAllUserInstruments() - " + e.getMessage());
         }
     }
 }

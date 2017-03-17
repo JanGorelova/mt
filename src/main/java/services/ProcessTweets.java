@@ -1,4 +1,4 @@
-package controllers;
+package services;
 
 import model.Subscription;
 import model.Tweet;
@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
 /**
  * Created by Air on 11/03/2017.
  */
-class ProcessTweets {
+public class ProcessTweets {
 
     //            <div class="singleTweet">
 //            <div class="tweetPic">
@@ -29,7 +29,7 @@ class ProcessTweets {
 //        </div>
 //
 
-    static String process(List<Tweet> tweets, List<Subscription> subscriptions, ResourceBundle bundle, DateTimeFormatter formatter) {
+    public static String process(List<Tweet> tweets, List<Subscription> subscriptions, ResourceBundle bundle, DateTimeFormatter formatter) {
         StringBuilder out = new StringBuilder();
         String subscribe;
         String functionName;

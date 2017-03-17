@@ -23,6 +23,9 @@ public class H2UserDao implements UserDao {
     private static final String CREATE_USER_SQL =
             "INSERT INTO Users (login, password, first_name, last_name, country) VALUES (?, ?, ?, ?, ?)";
 
+    private static final String UPDATE_USER_SQL =
+            "UPDATE Users SET login = ?, password = ?, first_name = ?, last_name = ?, country = ? WHERE user_id = ?;";
+
     public H2UserDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -31,7 +34,7 @@ public class H2UserDao implements UserDao {
     public long createUser(User user) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(CREATE_USER_SQL,
-                Statement.RETURN_GENERATED_KEYS)) {
+                     Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, user.getLogin());
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getFirstName());
@@ -95,8 +98,19 @@ public class H2UserDao implements UserDao {
     }
 
     @Override
-    public void updateUser(User user) throws SQLException {
-
+    public void updateUser(User user) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_USER_SQL)) {
+            statement.setString(1, user.getLogin());
+            statement.setString(2, user.getPassword());
+            statement.setString(3, user.getFirstName());
+            statement.setString(4, user.getLastName());
+            statement.setString(5, user.getCountry().toString());
+            statement.setLong(6, user.getUserId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("updateUser() - " + e.getMessage());
+        }
     }
 
     @Override

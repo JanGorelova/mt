@@ -12,12 +12,14 @@ INSERT INTO Instruments (instrument_name) VALUES ('drums');
 
 INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (1 , 1);
 INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (1 , 2);
-INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (2 , 1);
 INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (2 , 2);
+INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (2 , 3);
 INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (3 , 3);
+INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (3 , 4);
 INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (4 , 4);
-INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (4 , 3);
+INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (4 , 5);
 INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (5 , 5);
+INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (5 , 1);
 
 INSERT INTO Subscriptions (user_id, subscripted_user_id) VALUES (1, 1);
 INSERT INTO Subscriptions (user_id, subscripted_user_id) VALUES (1, 2);

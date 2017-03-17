@@ -9,7 +9,7 @@ import java.io.IOException;
  * Created by Air on 16/03/2017.
  */
 @WebFilter(servletNames = "*")
-public class charsetFilter implements Filter {
+public class CharsetFilter implements Filter {
     public void destroy() {
     }
 
@@ -20,7 +20,5 @@ public class charsetFilter implements Filter {
     }
 
     public void init(FilterConfig config) throws ServletException {
-
     }
-
 }

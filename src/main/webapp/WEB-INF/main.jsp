@@ -25,11 +25,12 @@
     <fmt:message bundle="${loc}" key="cancel" var="cancel"/>
     <fmt:message bundle="${loc}" key="subscribe" var="subscribe"/>
     <fmt:message bundle="${loc}" key="subscriptions" var="subscriptions"/>
+    <fmt:message bundle="${loc}" key="profileSettings" var="editProfile"/>
 
     <script src="<c:url value="/js/jquery-3.1.1.min.js"/>" type="text/javascript"></script>
     <script src="<c:url value="/js/main.js" />" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="<c:url value = "/css/main.css" />"/>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>${sessionScope.User.login} - MusicTwitter</title>
 </head>
 
@@ -41,10 +42,13 @@
         </div>
         <div id="menu">
             <ul class="menu">
-                <li class="menu"><a class="menu" id="subscriptionMenu" onclick="getSubscriptionTweets()">${subscriptions}</a></li>
-                <li class="menu"><a class="menu" id="instrumentMenu" onclick="getInstrumentTweets()">${instruments}</a></li>
+                <li class="menu"><a class="menu" id="subscriptionMenu"
+                                    onclick="getSubscriptionTweets()">${subscriptions}</a></li>
+                <li class="menu"><a class="menu" id="instrumentMenu" onclick="getInstrumentTweets()">${instruments}</a>
+                </li>
                 <li class="menu"><a class="menu" id="countryMenu" onclick="getCountryTweets()">${country}</a></li>
                 <li class="menu"><a class="menu" id="myTweetsMenu" onclick="getMyTweets()">${myTweets}</a></li>
+                <li class="menu"><a class="menu" id="editProfile" href="<c:url value = "/ShowProfile"/>">${editProfile}</a></li>
             </ul>
         </div>
     </div>
@@ -57,7 +61,7 @@
             </div>
 
             <div id="userinfo">
-                <span id="login">${sessionScope.User.login}</span><br>
+                <span id="userLogin">${sessionScope.User.login}</span><br>
                 <span id="name">${sessionScope.User.firstName} ${sessionScope.User.lastName}</span><br>
             </div>
 
@@ -76,8 +80,10 @@
                 <div style="text-align: center;">
                     <textarea name="tweet" id="tweet" placeholder="${newTweetPlaceholder}" maxlength="250"></textarea>
                 </div>
-                <input type="button" class="button" value="${post}" onclick="newTweet()">
-                <input type="reset" class="button" value="${cancel}">
+                <p>
+                    <button type="button" onclick="newTweet()">${post}</button>
+                    <button type="reset">${cancel}</button>
+                </p>
             </form>
         </div>
 
