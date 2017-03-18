@@ -17,8 +17,8 @@ public class LocaleFilter implements Filter {
 
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest request = (HttpServletRequest) req;
-        HttpSession session = request.getSession(true);
         String localeRequest = request.getParameter("locale");
+        HttpSession session = request.getSession(true);
         if (localeRequest == null || localeRequest.isEmpty()) {
             Locale localeSession = (Locale) session.getAttribute("locale");
             if (localeSession == null) {

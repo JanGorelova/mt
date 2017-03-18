@@ -9,6 +9,11 @@ INSERT INTO Instruments (instrument_name) VALUES ('bass');
 INSERT INTO Instruments (instrument_name) VALUES ('vocals');
 INSERT INTO Instruments (instrument_name) VALUES ('piano');
 INSERT INTO Instruments (instrument_name) VALUES ('drums');
+INSERT INTO Instruments (instrument_name) VALUES ('violin');
+INSERT INTO Instruments (instrument_name) VALUES ('trumpet');
+INSERT INTO Instruments (instrument_name) VALUES ('cello');
+INSERT INTO Instruments (instrument_name) VALUES ('clarinet');
+INSERT INTO Instruments (instrument_name) VALUES ('accordeon');
 
 INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (1 , 1);
 INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (1 , 2);

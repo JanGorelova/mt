@@ -5,8 +5,10 @@ import model.Countries;
 import model.Instrument;
 import model.User;
 import services.AddNewInstruments;
+import services.HashGenerator;
 import services.Validator;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,10 +29,13 @@ import java.util.ResourceBundle;
 public class EditUser extends HttpServlet {
 
     private DaoFactory daoFactory;
+    private HashGenerator hashGenerator;
 
     @Override
     public void init() throws ServletException {
-        daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
+        ServletContext context = getServletContext();
+        daoFactory = (DaoFactory) context.getAttribute("daoFactory");
+        hashGenerator = (HashGenerator) context.getAttribute("hashGenerator");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -55,7 +60,7 @@ public class EditUser extends HttpServlet {
                 String password = request.getParameter("password").trim();
                 user.setLogin(login);
                 if (!password.isEmpty()) {
-                    user.setPassword(password);
+                    user.setPassword(hashGenerator.getHash(password));
                 }
                 user.setCountry(country);
                 user.setFirstName(firstName);

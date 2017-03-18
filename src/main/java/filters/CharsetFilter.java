@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * Created by Air on 16/03/2017.
  */
-@WebFilter(servletNames = "*")
+@WebFilter("/*")
 public class CharsetFilter implements Filter {
     public void destroy() {
     }

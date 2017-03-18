@@ -8,8 +8,10 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.AddNewInstruments;
+import services.HashGenerator;
 import services.Validator;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,11 +31,14 @@ import java.util.ResourceBundle;
 public class RegisterUser extends HttpServlet {
 
     private DaoFactory daoFactory;
-    static final Logger log = LoggerFactory.getLogger(RegisterUser.class);
+    private HashGenerator hashGenerator;
+    static private final Logger log = LoggerFactory.getLogger(RegisterUser.class);
 
     @Override
     public void init() throws ServletException {
-        daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
+        ServletContext context = getServletContext();
+        daoFactory = (DaoFactory) context.getAttribute("daoFactory");
+        hashGenerator = (HashGenerator) context.getAttribute("hashGenerator");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -56,7 +61,7 @@ public class RegisterUser extends HttpServlet {
             String password = request.getParameter("password").trim();
             User user = new User();
             user.setLogin(login);
-            user.setPassword(password);
+            user.setPassword(hashGenerator.getHash(password));
             user.setCountry(country);
             user.setFirstName(firstName);
             user.setLastName(lastName);

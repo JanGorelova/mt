@@ -6,7 +6,9 @@ import model.Subscription;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import services.HashGenerator;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,11 +27,14 @@ import java.util.ResourceBundle;
 public class Login extends HttpServlet {
 
     private DaoFactory daoFactory;
-    static final Logger log = LoggerFactory.getLogger(Login.class);
+    private HashGenerator hashGenerator;
+    private static final Logger log = LoggerFactory.getLogger(Login.class);
 
     @Override
     public void init() throws ServletException {
-        daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
+        ServletContext context = getServletContext();
+        daoFactory = (DaoFactory) context.getAttribute("daoFactory");
+        hashGenerator = (HashGenerator) context.getAttribute("hashGenerator");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -49,7 +54,7 @@ public class Login extends HttpServlet {
                 if (password.length() > 0 && password.length() <= 256) {
                     User user = daoFactory.getUserDao().readUserByLogin(login);
                     if (user != null) {
-                        if (user.getPassword().equals(password)) {
+                        if (user.getPassword().equals(hashGenerator.getHash(password))) {
                             List<Instrument> instruments = daoFactory.getInstrumentDao().getUserInstruments(user.getUserId());
                             List<Subscription> subscriptions = daoFactory.getSubscriptionDao().getUserSubscriptions(user.getUserId());
                             session.setAttribute("User", user);
