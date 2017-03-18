@@ -3,6 +3,8 @@ package dao.h2;
 import dao.LikeDao;
 import model.Like;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -14,6 +16,7 @@ import java.util.List;
 public class H2LikeDao implements LikeDao {
 
     private DataSource dataSource;
+    static final Logger log = LoggerFactory.getLogger(H2LikeDao.class);
 
     private final String CREATE_LIKE_SQL = "INSERT INTO Likes (user_id, message_id) VALUES (?, ?);";
 
@@ -40,7 +43,7 @@ public class H2LikeDao implements LikeDao {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("createLike() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
         return 0;
     }
@@ -56,7 +59,7 @@ public class H2LikeDao implements LikeDao {
                 createLike(like);
             }
         } catch (SQLException e) {
-            System.out.println("updateLike() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
     }
 
@@ -82,7 +85,7 @@ public class H2LikeDao implements LikeDao {
             statement.setLong(1, likeId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("deleteLike() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
     }
 
@@ -97,7 +100,7 @@ public class H2LikeDao implements LikeDao {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("getLikeCount() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
         return 0;
     }

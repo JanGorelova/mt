@@ -5,6 +5,8 @@ import model.Instrument;
 import model.Message;
 import model.Tweet;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -17,6 +19,7 @@ import java.util.List;
 public class H2MessageDao implements MessageDao {
 
     private DataSource dataSource;
+    static final Logger log = LoggerFactory.getLogger(H2MessageDao.class);
 
     private final String CREATE_MESSAGE_SQL =
             "INSERT INTO Messages (user_id, message_date, message_text) VALUES (?, ?, ?);";
@@ -85,7 +88,7 @@ public class H2MessageDao implements MessageDao {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("createMessage() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
         return 0;
     }
@@ -97,7 +100,6 @@ public class H2MessageDao implements MessageDao {
 
     @Override
     public void updateMessage(Message message) throws SQLException {
-
     }
 
     @Override
@@ -127,7 +129,7 @@ public class H2MessageDao implements MessageDao {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("getUserMessages() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
         return tweets;
     }
@@ -144,7 +146,7 @@ public class H2MessageDao implements MessageDao {
                 getTweetsFromResultSet(resultSet, tweets);
             }
         } catch (SQLException e) {
-            System.out.println("getSubscriptionMessages() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
         return tweets;
     }
@@ -161,7 +163,7 @@ public class H2MessageDao implements MessageDao {
                 getTweetsFromResultSet(resultSet, tweets);
             }
         } catch (SQLException e) {
-            System.out.println("getInstrumentMessages() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
         return tweets;
     }
@@ -178,7 +180,7 @@ public class H2MessageDao implements MessageDao {
                 getTweetsFromResultSet(resultSet, tweets);
             }
         } catch (SQLException e) {
-            System.out.println("getCountryMessages() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
         return tweets;
     }

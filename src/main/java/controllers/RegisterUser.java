@@ -5,6 +5,8 @@ import model.Countries;
 import model.Instrument;
 import model.Subscription;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.AddNewInstruments;
 import services.Validator;
 
@@ -27,6 +29,7 @@ import java.util.ResourceBundle;
 public class RegisterUser extends HttpServlet {
 
     private DaoFactory daoFactory;
+    static final Logger log = LoggerFactory.getLogger(RegisterUser.class);
 
     @Override
     public void init() throws ServletException {
@@ -71,6 +74,7 @@ public class RegisterUser extends HttpServlet {
             }
             session.setAttribute("Subscriptions", new ArrayList<Subscription>());
             session.setAttribute("User", user);
+            log.info("User registered: " + user.getLogin());
             request.getRequestDispatcher("/WEB-INF/main.jsp").forward(request, response);
         }
     }

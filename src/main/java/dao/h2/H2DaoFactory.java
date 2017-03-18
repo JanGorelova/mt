@@ -60,6 +60,7 @@ public class H2DaoFactory implements DaoFactory {
         return likeDao;
     }
 
+
     @Override
     public void close() throws Exception {
     }

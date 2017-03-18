@@ -3,6 +3,8 @@ package dao.h2;
 import dao.SubscriptionDao;
 import model.Instrument;
 import model.Subscription;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -15,6 +17,7 @@ import java.util.List;
 public class H2SubscriptionDao implements SubscriptionDao {
 
     private DataSource dataSource;
+    static final Logger log = LoggerFactory.getLogger(H2SubscriptionDao.class);
 
     private final String CREATE_SUBSCRIPTION_SQL =
             "INSERT INTO Subscriptions (user_id, subscripted_user_id) VALUES (?, ?);";
@@ -42,7 +45,7 @@ public class H2SubscriptionDao implements SubscriptionDao {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("createSubscription() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
         return 0;
     }
@@ -65,7 +68,7 @@ public class H2SubscriptionDao implements SubscriptionDao {
             statement.setLong(2, subscription.getSubscriptedUserId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("deleteSubscription() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
     }
 
@@ -85,7 +88,7 @@ public class H2SubscriptionDao implements SubscriptionDao {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("getUserSubscriptions() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
         return subscriptions;
     }

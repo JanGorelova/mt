@@ -1,7 +1,10 @@
 package dao.h2;
 
 import dao.InstrumentDao;
+import listeners.DatabaseInitListener;
 import model.Instrument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -17,6 +20,7 @@ import java.util.List;
 public class H2InstrumentDao implements InstrumentDao {
 
     private DataSource dataSource;
+    static final Logger log = LoggerFactory.getLogger(H2InstrumentDao.class);
 
     private final String CREATE_INSTRUMENT_SQL = "INSERT INTO Instruments (instrument_name) VALUES (?) ;";
 
@@ -43,7 +47,6 @@ public class H2InstrumentDao implements InstrumentDao {
     @Override
     public long createInstruments(List<Instrument> instruments) {
         int[] result = {0};
-
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(CREATE_INSTRUMENT_SQL)) {
             for (Instrument instrument : instruments) {
@@ -52,7 +55,7 @@ public class H2InstrumentDao implements InstrumentDao {
             }
             result = statement.executeBatch();
         } catch (SQLException e) {
-            System.out.println("createInstrument() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
         return result.length;
     }
@@ -69,7 +72,7 @@ public class H2InstrumentDao implements InstrumentDao {
                 instrument.setInstrumentId(instrumentId);
             }
         } catch (SQLException e) {
-            System.out.println("readInstrument() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
         return instrument;
     }
@@ -99,7 +102,7 @@ public class H2InstrumentDao implements InstrumentDao {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("getUserInstruments() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
         return instruments;
     }
@@ -118,7 +121,7 @@ public class H2InstrumentDao implements InstrumentDao {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("getAllInstruments() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
         return instruments;
     }
@@ -144,7 +147,7 @@ public class H2InstrumentDao implements InstrumentDao {
             statement.setLong(1, userId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("deleteAllUserInstruments() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
     }
 }

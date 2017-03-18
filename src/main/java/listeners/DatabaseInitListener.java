@@ -1,7 +1,10 @@
 package listeners;
 
+import controllers.RegisterUser;
 import dao.DaoFactory;
 import dao.h2.H2DaoFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContextEvent;
@@ -22,17 +25,17 @@ import java.util.stream.Collectors;
  * Created by iMac on 05/03/17.
  */
 
-//INSERT INTO Messages (user_id, message_date, message_text) VALUES (1, '2014-04-07', 'Admin first tweet');
-
 @WebListener
 public class DatabaseInitListener implements ServletContextListener {
 
     @Resource(name = "jdbc/mtdb")
     private DataSource dataSource;
 
+    static final Logger log = LoggerFactory.getLogger(DatabaseInitListener.class);
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        System.out.println("Database initialization...");
+        log.info("Database initialization started...");
         Pattern pattern = Pattern.compile("^\\d+\\.sql$");
         Path sqlPath = Paths.get(sce.getServletContext().getRealPath("/WEB-INF/classes/sql"));
         try (Connection connection = dataSource.getConnection();
@@ -54,11 +57,11 @@ public class DatabaseInitListener implements ServletContextListener {
             }
             statement.executeBatch();
         } catch (SQLException e) {
-            System.out.println("SQL error: " + e.getMessage());
+            log.warn("SQL script problems: " + e.getMessage());
         } catch (IOException e) {
-            System.out.println("SQL file error:" + e.getMessage());
+            log.warn("SQL file error:" + e.getMessage());
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.warn(e.getMessage());
         }
 
         DaoFactory daoFactory = new H2DaoFactory(dataSource);

@@ -4,6 +4,8 @@ import dao.DaoFactory;
 import model.Instrument;
 import model.Subscription;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,6 +25,7 @@ import java.util.ResourceBundle;
 public class Login extends HttpServlet {
 
     private DaoFactory daoFactory;
+    static final Logger log = LoggerFactory.getLogger(Login.class);
 
     @Override
     public void init() throws ServletException {
@@ -53,6 +56,7 @@ public class Login extends HttpServlet {
                             session.setAttribute("Instruments", instruments);
                             session.setAttribute("Subscriptions", subscriptions);
                             request.removeAttribute("loginError");
+                            log.info("User login: " + user.getLogin());
                             request.getRequestDispatcher("/WEB-INF/main.jsp").forward(request, response);
                             return;
                         }

@@ -3,6 +3,8 @@ package dao.h2;
 import dao.UserDao;
 import model.Countries;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -13,6 +15,7 @@ import java.sql.*;
 public class H2UserDao implements UserDao {
 
     private DataSource dataSource;
+    static final Logger log = LoggerFactory.getLogger(H2UserDao.class);
 
     private static final String SELECT_USER_BY_ID_SQL =
             "SELECT login, password, first_name, last_name, country FROM Users WHERE user_id = ?";
@@ -47,7 +50,7 @@ public class H2UserDao implements UserDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.warn(e.getMessage());
         }
         return 0;
     }
@@ -68,7 +71,7 @@ public class H2UserDao implements UserDao {
                 user.setUserId(userId);
             }
         } catch (SQLException e) {
-            System.out.println("readUserById() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
         return user;
     }
@@ -89,7 +92,7 @@ public class H2UserDao implements UserDao {
                 user.setLogin(login);
             }
         } catch (SQLException e) {
-                System.out.println("Login is free: readUserByLogin() - " + e.getMessage());
+            log.info("Checking if login is free: " + e.getMessage());
             return null;
         }
         return user;
@@ -107,12 +110,11 @@ public class H2UserDao implements UserDao {
             statement.setLong(6, user.getUserId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("updateUser() - " + e.getMessage());
+            log.warn(e.getMessage());
         }
     }
 
     @Override
     public void deleteUser(User user) throws SQLException {
-
     }
 }
