@@ -23,11 +23,6 @@ public class ShowProfile extends HttpServlet {
         HttpSession session = request.getSession();
         Object obj = session.getAttribute("User");
 
-        String localeRequest = request.getParameter("locale");
-        if (localeRequest != null && !localeRequest.isEmpty()) {
-            session.setAttribute("locale", localeRequest);
-        }
-
         if (obj != null) {
             List<Instrument> instrumentList = (List<Instrument>) session.getAttribute("Instruments");
             User user = (User) obj;

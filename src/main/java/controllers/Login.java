@@ -22,17 +22,22 @@ import java.util.ResourceBundle;
 @WebServlet("/login")
 public class Login extends HttpServlet {
 
+    private DaoFactory daoFactory;
+
+    @Override
+    public void init() throws ServletException {
+        daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        String localeString = (String) session.getAttribute("locale");
-        if (localeString == null || localeString.isEmpty()) {
-            localeString = "en";
+        Locale locale = (Locale) session.getAttribute("locale");
+        if (locale == null) {
+            locale = new Locale("en");
         }
-        Locale locale = new Locale(localeString);
         ResourceBundle bundle = ResourceBundle.getBundle("login", locale);
 
-        DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
         String login = request.getParameter("login").trim();
         String password = request.getParameter("password").trim();
 

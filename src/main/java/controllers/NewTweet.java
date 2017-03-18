@@ -18,10 +18,17 @@ import java.time.LocalDateTime;
  */
 @WebServlet("/NewTweet")
 public class NewTweet extends HttpServlet {
+
+    private DaoFactory daoFactory;
+
+    @Override
+    public void init() throws ServletException {
+        daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html");
-        DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("User");
         String tweetText = request.getParameter("tweetText");

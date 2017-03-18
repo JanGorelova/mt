@@ -5,6 +5,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * Created by iMac on 17/03/17.
@@ -19,18 +20,17 @@ public class LocaleFilter implements Filter {
         HttpSession session = request.getSession(true);
         String localeRequest = request.getParameter("locale");
         if (localeRequest == null || localeRequest.isEmpty()) {
-            String localeSession = (String) session.getAttribute("locale");
+            Locale localeSession = (Locale) session.getAttribute("locale");
             if (localeSession == null) {
-                session.setAttribute("locale", req.getLocale().toString());
+                session.setAttribute("locale", req.getLocale());
             }
         } else {
-            session.setAttribute("locale", localeRequest);
+            session.setAttribute("locale", new Locale(localeRequest));
         }
         chain.doFilter(req, resp);
     }
 
     public void init(FilterConfig config) throws ServletException {
-
     }
 
 }

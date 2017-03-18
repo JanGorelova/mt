@@ -18,9 +18,16 @@ import java.util.List;
  */
 @WebServlet("/UnsubscribePressed")
 public class UnsubscribePressed extends HttpServlet {
+
+    private DaoFactory daoFactory;
+
+    @Override
+    public void init() throws ServletException {
+        daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("User");
         List<Subscription> subscriptions = (List<Subscription>) session.getAttribute("Subscriptions");

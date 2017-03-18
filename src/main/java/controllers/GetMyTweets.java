@@ -25,12 +25,19 @@ import java.util.ResourceBundle;
  */
 @WebServlet("/GetMyTweets")
 public class GetMyTweets extends HttpServlet {
+
+    private DaoFactory daoFactory;
+
+    @Override
+    public void init() throws ServletException {
+        daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html; charset=UTF-8");
         try (Writer out = response.getWriter()) {
             HttpSession session = request.getSession();
-
             User user = (User) session.getAttribute("User");
             List<Subscription> subscriptions = (List<Subscription>) session.getAttribute("Subscriptions");
 
@@ -48,11 +55,9 @@ public class GetMyTweets extends HttpServlet {
                 offset = 0;
             }
 
-            String localeString = (String) session.getAttribute("locale");
-            Locale locale = new Locale(localeString);
+            Locale locale = (Locale) session.getAttribute("locale");
             ResourceBundle bundle = ResourceBundle.getBundle("main", locale);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(locale);
-            DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
 
             if (daoFactory != null && user != null) {
                 List<Instrument> instrumentList = (List<Instrument>) session.getAttribute("Instruments");

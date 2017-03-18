@@ -25,6 +25,14 @@ import java.util.ResourceBundle;
  */
 @WebServlet("/EditUser")
 public class EditUser extends HttpServlet {
+
+    private DaoFactory daoFactory;
+
+    @Override
+    public void init() throws ServletException {
+        daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
@@ -32,13 +40,8 @@ public class EditUser extends HttpServlet {
 
         if (obj != null) {
             User user = (User) obj;
-            String localeString = (String) session.getAttribute("locale");
-            if (localeString == null) {
-                localeString = "en";
-            }
-            ResourceBundle bundle = ResourceBundle.getBundle("register", new Locale(localeString));
-            DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
-            List<Instrument> instrumentList = (List<Instrument>) session.getAttribute("Instruments");
+            Locale locale = (Locale) session.getAttribute("locale");
+            ResourceBundle bundle = ResourceBundle.getBundle("register", locale);
 
             if (Validator.validateUpdatedProfile(request, bundle, daoFactory, user)) {
                 request.getRequestDispatcher("/WEB-INF/profile.jsp").forward(request, response);

@@ -25,16 +25,22 @@ import java.util.ResourceBundle;
  */
 @WebServlet("/registerUser")
 public class RegisterUser extends HttpServlet {
+
+    private DaoFactory daoFactory;
+
+    @Override
+    public void init() throws ServletException {
+        daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        String localeString = (String) session.getAttribute("locale");
-        if (localeString == null) {
-            localeString = "en";
+        Locale locale = (Locale) session.getAttribute("locale");
+        if (locale == null) {
+            locale = new Locale("en");
         }
-        Locale locale = new Locale(localeString);
         ResourceBundle bundle = ResourceBundle.getBundle("register", locale);
-        DaoFactory daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
 
         if (Validator.validateNewUser(request, bundle, daoFactory)) {
             request.getRequestDispatcher("/register.jsp").forward(request, response);
