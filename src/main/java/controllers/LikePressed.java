@@ -13,13 +13,18 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by iMac on 11/03/17.
+ * Servlet that handles the pressed Like and sends the data to the database
  */
 @WebServlet("/LikePressed")
 public class LikePressed extends HttpServlet {
 
     private DaoFactory daoFactory;
 
+    /**
+     * Method gets the common Dao Factory from servlet context.
+     *
+     * @throws ServletException - standard Servlet exception
+     */
     @Override
     public void init() throws ServletException {
         daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");

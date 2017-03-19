@@ -20,13 +20,19 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Created by iMac on 10/03/17.
+ * Servlet requests all tweets from users, who are in the subscription list of current user
+ * and returns them as a part of a web page.
  */
 @WebServlet("/GetSubscriptions")
 public class GetSubscriptions extends HttpServlet {
 
     private DaoFactory daoFactory;
 
+    /**
+     * Method gets the common Dao Factory from servlet context.
+     *
+     * @throws ServletException - standard Servlet exception
+     */
     @Override
     public void init() throws ServletException {
         daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
@@ -34,34 +40,41 @@ public class GetSubscriptions extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        response.setContentType("text/html; charset=UTF-8");
-        try (Writer out = response.getWriter()) {
-            HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("User");
 
-            User user = (User) session.getAttribute("User");
-            List<Subscription> subscriptions = (List<Subscription>) session.getAttribute("Subscriptions");
+        // Do something only if the user is logged in
+        if (user != null) {
 
-            // Pagination
-            String pageCountString = request.getParameter("pageCount");
-            String resetLimit = request.getParameter("resetLimit");
-            int limit = 20;
-            int offset = 0;
-            if (pageCountString != null && !pageCountString.isEmpty()) {
-                int pageCount = Integer.parseInt(pageCountString);
-                offset = pageCount * limit;
-            }
-            if (resetLimit != null) {
-                limit = offset;
-                offset = 0;
-            }
+            response.setContentType("text/html; charset=UTF-8");
+            try (Writer out = response.getWriter()) {
 
-            Locale locale = (Locale) session.getAttribute("locale");
-            ResourceBundle bundle = ResourceBundle.getBundle("main", locale);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(locale);
+                @SuppressWarnings("unchecked")
+                List<Subscription> subscriptions = (List<Subscription>) session.getAttribute("Subscriptions");
 
-            if (daoFactory != null && user != null) {
-                List<Tweet> tweets = daoFactory.getMessageDao().getSubscriptionMessages(user.getUserId(), limit, offset);
-                out.write(ProcessTweets.process(tweets, subscriptions, bundle, formatter));
+                // Pagination
+                String pageCountString = request.getParameter("pageCount");
+                String resetLimit = request.getParameter("resetLimit");
+                int limit = 20;
+                int offset = 0;
+                if (pageCountString != null && !pageCountString.isEmpty()) {
+                    int pageCount = Integer.parseInt(pageCountString);
+                    offset = pageCount * limit;
+                }
+                if (resetLimit != null) {
+                    limit = offset;
+                    offset = 0;
+                }
+
+                Locale locale = (Locale) session.getAttribute("locale");
+                ResourceBundle bundle = ResourceBundle.getBundle("main", locale);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(locale);
+
+                // Sends the query to the database, generates html and sends it to response
+                if (daoFactory != null) {
+                    List<Tweet> tweets = daoFactory.getMessageDao().getSubscriptionMessages(user.getUserId(), limit, offset);
+                    out.write(ProcessTweets.process(tweets, subscriptions, bundle, formatter));
+                }
             }
         }
     }

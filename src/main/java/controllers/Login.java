@@ -21,7 +21,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Created by Air on 26/02/2017.
+ * This servlet gets login and password from the login page and compares them with information stored in the
+ * database. If login and password hash matches with the values from the database, the servlet gets all info
+ * about this user, his instruments and subscriptions from the database and sets them as session attributes,
+ * then redirects to the main page.
+ * If not - it redirects back to the login page with error attribute.
  */
 @WebServlet("/login")
 public class Login extends HttpServlet {
@@ -30,6 +34,10 @@ public class Login extends HttpServlet {
     private HashGenerator hashGenerator;
     private static final Logger log = LoggerFactory.getLogger(Login.class);
 
+    /**
+     * Method gets common Dao Factory and Hash Generator from servlet context.
+     * @throws ServletException - standard Servlet exception
+     */
     @Override
     public void init() throws ServletException {
         ServletContext context = getServletContext();
@@ -49,8 +57,9 @@ public class Login extends HttpServlet {
         String login = request.getParameter("login").trim();
         String password = request.getParameter("password").trim();
 
+        // Password and login validation
         if (!login.isEmpty() && !password.isEmpty()) {
-            if (login.length() > 0 && login.length() <= 32) {
+            if (login.length() > 0 && login.length() <= 15) {
                 if (password.length() > 0 && password.length() <= 256) {
                     User user = daoFactory.getUserDao().readUserByLogin(login);
                     if (user != null) {
@@ -69,6 +78,7 @@ public class Login extends HttpServlet {
                 }
             }
         }
+        // Redirecting back to the login page with error message
         request.setAttribute("loginError", bundle.getString("loginError"));
         request.getRequestDispatcher("/index.jsp").forward(request, response);
     }

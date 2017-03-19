@@ -3,18 +3,28 @@ package model;
 import java.time.LocalDateTime;
 
 /**
- * Created by Air on 07/02/2017.
+ * DTO class that represents message
  */
 public class Message {
 
-    protected long messageId;
+    private long messageId;
     protected long userId;
-    protected LocalDateTime messageDate;
-    protected String messageText;
+    private LocalDateTime messageDate;
+    private String messageText;
 
+    /**
+     * No-args constructor for Message instance
+     */
     public Message() {
     }
 
+    /**
+     * All-args constructor for Message instance
+     * @param userId author's id
+     * @param messageId message id
+     * @param messageDate date and time of the current message
+     * @param messageText message content
+     */
     public Message(long userId, long messageId, LocalDateTime messageDate, String messageText) {
         this.userId = userId;
         this.messageId = messageId;

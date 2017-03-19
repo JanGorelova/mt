@@ -1,7 +1,6 @@
 package dao.h2;
 
 import dao.SubscriptionDao;
-import model.Instrument;
 import model.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,26 +11,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by iMac on 09/03/17.
+ * SubscriptionDao implementation for the H2 database.
  */
 public class H2SubscriptionDao implements SubscriptionDao {
 
     private DataSource dataSource;
-    static final Logger log = LoggerFactory.getLogger(H2SubscriptionDao.class);
 
-    private final String CREATE_SUBSCRIPTION_SQL =
+    // SQL queries for all necessary operations:
+    private static final Logger log = LoggerFactory.getLogger(H2SubscriptionDao.class);
+
+    private static final String CREATE_SUBSCRIPTION_SQL =
             "INSERT INTO Subscriptions (user_id, subscripted_user_id) VALUES (?, ?);";
 
-    private final String GET_USER_SUBSCRIPTIONS_SQL =
+    private static final String GET_USER_SUBSCRIPTIONS_SQL =
             "SELECT subscription_id, subscripted_user_id FROM Subscriptions WHERE user_id = ?";
 
-    private final String DELETE_SUBSCRIPTION_SQL =
+    private static final String DELETE_SUBSCRIPTION_SQL =
             "DELETE FROM Subscriptions WHERE (user_id = ? AND subscripted_user_id = ?);";
 
-    public H2SubscriptionDao(DataSource dataSource) {
+    /**
+     * Simple constructor of the SubscriptionDao implementation for the H2 database.
+     * @param dataSource any DataSource
+     */
+    H2SubscriptionDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
+    /**
+     * Creates single subscription.
+     * @param subscription Subscription object
+     * @return id of the created subscription
+     */
     @Override
     public long createSubscription(Subscription subscription) {
         try (Connection connection = dataSource.getConnection();
@@ -50,16 +60,10 @@ public class H2SubscriptionDao implements SubscriptionDao {
         return 0;
     }
 
-    @Override
-    public Subscription readSubscription(long subscriptionId) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public void updateSubscription(Subscription subscription) throws SQLException {
-
-    }
-
+    /**
+     * Delete the specified Subscription from the database.
+     * @param subscription Subscription to delete
+     */
     @Override
     public void deleteSubscription(Subscription subscription)  {
         try (Connection connection = dataSource.getConnection();
@@ -72,6 +76,11 @@ public class H2SubscriptionDao implements SubscriptionDao {
         }
     }
 
+    /**
+     * Returns the list of all subscriptions of the specified user.
+     * @param userId user id
+     * @return ArrayList with Subscriptions
+     */
     @Override
     public List<Subscription> getUserSubscriptions(long userId) {
         List<Subscription> subscriptions = new ArrayList<>();

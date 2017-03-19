@@ -1,7 +1,7 @@
 package model;
 
 /**
- * Created by Air on 07/02/2017.
+ * Enum with all available countries for this service
  */
 public enum Countries {
     RUSSIA, USA, SPAIN, FRANCE

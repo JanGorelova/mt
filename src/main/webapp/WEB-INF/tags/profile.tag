@@ -1,3 +1,4 @@
+<%--User registration form--%>
 <%@tag description="User's profile editor tag" pageEncoding="UTF-8" %>
 <%@attribute name="actionLink" required="true" %>
 <%@attribute name="cancelLink" required="true" %>

@@ -3,6 +3,8 @@ package controllers;
 import dao.DaoFactory;
 import model.Subscription;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,13 +16,19 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by iMac on 13/03/17.
+ * Servlet handles the pressed Subscribe link and sends the data to the database
  */
 @WebServlet("/SubscribePressed")
 public class SubscribePressed extends HttpServlet {
 
     private DaoFactory daoFactory;
+    private static final Logger log = LoggerFactory.getLogger(Login.class);
 
+    /**
+     * Method gets the common Dao Factory from servlet context.
+     *
+     * @throws ServletException - standard Servlet exception
+     */
     @Override
     public void init() throws ServletException {
         daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
@@ -30,13 +38,20 @@ public class SubscribePressed extends HttpServlet {
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("User");
-        List<Subscription> subscriptions = (List<Subscription>) session.getAttribute("Subscriptions");
-        String subscriptedUserId = request.getParameter("userId");
 
-        if (user != null && !subscriptedUserId.isEmpty()) {
-            Subscription subscription = new Subscription(0, user.getUserId(), Long.parseLong(subscriptedUserId));
-            subscription.setSubscriptionId(daoFactory.getSubscriptionDao().createSubscription(subscription));
-            subscriptions.add(subscription);
+        @SuppressWarnings("unchecked")
+        List<Subscription> subscriptions = (List<Subscription>) session.getAttribute("Subscriptions");
+        String subscribedUserId = request.getParameter("userId");
+
+        // Proceed only if the user is authorized and user id to subscribe is correct
+        if (user != null && !subscribedUserId.isEmpty()) {
+            try {
+                Subscription subscription = new Subscription(0, user.getUserId(), Long.parseLong(subscribedUserId));
+                subscription.setSubscriptionId(daoFactory.getSubscriptionDao().createSubscription(subscription));
+                subscriptions.add(subscription);
+            } catch (NumberFormatException e) {
+                log.warn("Incorrect user id for subscription.");
+            }
         }
     }
 

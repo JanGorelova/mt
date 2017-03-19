@@ -21,13 +21,18 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Created by Air on 11/03/2017.
+ * Servlet requests all tweets of the current user and returns them as a part of a web page.
  */
 @WebServlet("/GetMyTweets")
 public class GetMyTweets extends HttpServlet {
 
     private DaoFactory daoFactory;
 
+    /**
+     * Method gets the common Dao Factory from servlet context.
+     *
+     * @throws ServletException - standard Servlet exception
+     */
     @Override
     public void init() throws ServletException {
         daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
@@ -35,41 +40,51 @@ public class GetMyTweets extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        response.setContentType("text/html; charset=UTF-8");
-        try (Writer out = response.getWriter()) {
-            HttpSession session = request.getSession();
-            User user = (User) session.getAttribute("User");
-            List<Subscription> subscriptions = (List<Subscription>) session.getAttribute("Subscriptions");
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("User");
 
-            // Pagination
-            String pageCountString = request.getParameter("pageCount");
-            String resetLimit = request.getParameter("resetLimit");
-            int limit = 20;
-            int offset = 0;
-            if (pageCountString != null && !pageCountString.isEmpty()) {
-                int pageCount = Integer.parseInt(pageCountString);
-                offset = pageCount * limit;
-            }
-            if (resetLimit != null) {
-                limit = offset;
-                offset = 0;
-            }
+        // Do something only if the user logged in
+        if (user != null) {
+            response.setContentType("text/html; charset=UTF-8");
+            try (Writer out = response.getWriter()) {
 
-            Locale locale = (Locale) session.getAttribute("locale");
-            ResourceBundle bundle = ResourceBundle.getBundle("main", locale);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(locale);
+                @SuppressWarnings("unchecked")
+                List<Subscription> subscriptions = (List<Subscription>) session.getAttribute("Subscriptions");
 
-            if (daoFactory != null && user != null) {
-                List<Instrument> instrumentList = (List<Instrument>) session.getAttribute("Instruments");
-                StringBuilder instruments = new StringBuilder();
-                for (Instrument instrument : instrumentList) {
-                    instruments.append(instrument.getInstrumentName()).append(", ");
+                // Pagination
+                String pageCountString = request.getParameter("pageCount");
+                String resetLimit = request.getParameter("resetLimit");
+                int limit = 20;
+                int offset = 0;
+                if (pageCountString != null && !pageCountString.isEmpty()) {
+                    int pageCount = Integer.parseInt(pageCountString);
+                    offset = pageCount * limit;
                 }
-                if (instruments.length() > 2) {
-                    instruments.delete(instruments.length() - 2, instruments.length());
+                if (resetLimit != null) {
+                    limit = offset;
+                    offset = 0;
                 }
-                List<Tweet> tweets = daoFactory.getMessageDao().getUserMessages(user, instruments.toString(), limit, offset);
-                out.write(ProcessTweets.process(tweets, subscriptions, bundle, formatter));
+
+                Locale locale = (Locale) session.getAttribute("locale");
+                ResourceBundle bundle = ResourceBundle.getBundle("main", locale);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(locale);
+
+                // Sends the query to the database, generates html and sends it to response
+                if (daoFactory != null) {
+
+                    @SuppressWarnings("unchecked")
+                    List<Instrument> instrumentList = (List<Instrument>) session.getAttribute("Instruments");
+
+                    StringBuilder instruments = new StringBuilder(); // Prepare the string of all user's instruments, it will be the same for all tweets here
+                    for (Instrument instrument : instrumentList) {
+                        instruments.append(instrument.getInstrumentName()).append(", ");
+                    }
+                    if (instruments.length() > 2) {
+                        instruments.delete(instruments.length() - 2, instruments.length()); // Removes the unwanted comma and space at the end of the string
+                    }
+                    List<Tweet> tweets = daoFactory.getMessageDao().getUserMessages(user, instruments.toString(), limit, offset);
+                    out.write(ProcessTweets.process(tweets, subscriptions, bundle, formatter));
+                }
             }
         }
     }

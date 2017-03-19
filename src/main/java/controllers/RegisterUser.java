@@ -25,7 +25,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Created by iMac on 06/03/17.
+ * Servlet for processing, validating and updating the new user's information from Register page.
  */
 @WebServlet("/registerUser")
 public class RegisterUser extends HttpServlet {
@@ -34,6 +34,10 @@ public class RegisterUser extends HttpServlet {
     private HashGenerator hashGenerator;
     static private final Logger log = LoggerFactory.getLogger(RegisterUser.class);
 
+    /**
+     * Method gets common Dao Factory and Hash Generator from servlet context.
+     * @throws ServletException - standard Servlet exception
+     */
     @Override
     public void init() throws ServletException {
         ServletContext context = getServletContext();
@@ -50,8 +54,11 @@ public class RegisterUser extends HttpServlet {
         }
         ResourceBundle bundle = ResourceBundle.getBundle("register", locale);
 
+        // If validation failed, get back to the register page and show errors
         if (Validator.validateNewUser(request, bundle, daoFactory)) {
             request.getRequestDispatcher("/register.jsp").forward(request, response);
+
+            // If validation is OK, process data and create the new user in the database, then forward to the main page
         } else {
             String login = request.getParameter("login").trim();
             String firstName = request.getParameter("firstName").trim();
@@ -66,6 +73,15 @@ public class RegisterUser extends HttpServlet {
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setUserId(daoFactory.getUserDao().createUser(user));
+
+            // If login has been used before validation and creating
+            if (user.getUserId() == 0) {
+                request.setAttribute("loginExists", bundle.getString("loginExists"));
+                request.getRequestDispatcher("/register.jsp").forward(request, response);
+                return;
+            }
+
+            // Adding instruments to the user and creating new ones if needed, then add them to the session attribute
             if (!instrument.isEmpty()) {
                 try {
                     AddNewInstruments.addNewInstruments(instrument, daoFactory, session, user);

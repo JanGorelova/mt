@@ -1,7 +1,6 @@
 package dao.h2;
 
 import dao.MessageDao;
-import model.Instrument;
 import model.Message;
 import model.Tweet;
 import model.User;
@@ -14,22 +13,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by iMac on 10/03/17.
+ * MessageDao implementation for the H2 database.
  */
 public class H2MessageDao implements MessageDao {
 
     private DataSource dataSource;
-    static final Logger log = LoggerFactory.getLogger(H2MessageDao.class);
+    private static final Logger log = LoggerFactory.getLogger(H2MessageDao.class);
 
-    private final String CREATE_MESSAGE_SQL =
+    // SQL queries for all necessary operations:
+    private static final String CREATE_MESSAGE_SQL =
             "INSERT INTO Messages (user_id, message_date, message_text) VALUES (?, ?, ?);";
 
-    private final String GET_USER_MESSAGES_SQL =
+    private static final String GET_USER_MESSAGES_SQL =
             "SELECT message_id, message_date, message_text, " +
                     "(SELECT COUNT(like_id) FROM Likes WHERE Likes.message_id = m.message_id) AS like_count " +
                     "FROM Messages AS m WHERE user_id = ? ORDER BY m.message_date DESC LIMIT ? OFFSET ?;";
 
-    private final String GET_SUBSCRIPTION_MESSAGES_SQL =
+    private static final String GET_SUBSCRIPTION_MESSAGES_SQL =
             "SELECT m.message_id, m.user_id, m.message_date, m.message_text, u.login, " +
                     "(SELECT COUNT(like_id) FROM Likes WHERE Likes.message_id = m.message_id) AS like_count, " +
                     "(SELECT GROUP_CONCAT(i.instrument_name SEPARATOR ', ') FROM Instruments AS i " +
@@ -42,7 +42,7 @@ public class H2MessageDao implements MessageDao {
                     "ON (m.user_id = u.user_id) " +
                     "WHERE s.user_id = ? ORDER BY m.message_date DESC LIMIT ? OFFSET ?;";
 
-    private final String GET_INSTRUMENT_MESSAGES_SQL =
+    private static final String GET_INSTRUMENT_MESSAGES_SQL =
             "SELECT m.message_id, m.user_id, m.message_date, m.message_text, u.login, " +
                     "(SELECT COUNT(like_id) FROM Likes WHERE Likes.message_id = m.message_id) AS like_count, " +
                     "(SELECT GROUP_CONCAT(i.instrument_name SEPARATOR ', ') FROM Instruments AS i " +
@@ -57,7 +57,7 @@ public class H2MessageDao implements MessageDao {
                     "ON (ui1.instrument_id = ui2.instrument_id) " +
                     "WHERE ui2.user_id = ? GROUP BY m.message_id ORDER BY m.message_date DESC LIMIT ? OFFSET ?;";
 
-    private final String GET_COUNTRY_MESSAGES_SQL =
+    private static final String GET_COUNTRY_MESSAGES_SQL =
             "SELECT m.message_id, m.user_id, m.message_date, m.message_text, u1.login, " +
                     "(SELECT COUNT(like_id) FROM Likes WHERE Likes.message_id = m.message_id) AS like_count, " +
                     "(SELECT GROUP_CONCAT(i.instrument_name SEPARATOR ', ') FROM Instruments AS i " +
@@ -70,10 +70,19 @@ public class H2MessageDao implements MessageDao {
                     "ON u1.country = u2.country " +
                     "WHERE u2.user_id = ? ORDER BY m.message_date DESC LIMIT ? OFFSET ?;";
 
-    public H2MessageDao(DataSource dataSource) {
+    /**
+     * Simple constructor of the MessageDao implementation for the H2 database.
+     * @param dataSource any DataSource
+     */
+    H2MessageDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
+    /**
+     * Creates new message in the database
+     * @param message message to create
+     * @return auto generated id of the new message
+     */
     @Override
     public long createMessage(Message message) {
         try (Connection connection = dataSource.getConnection();
@@ -93,20 +102,14 @@ public class H2MessageDao implements MessageDao {
         return 0;
     }
 
-    @Override
-    public Message readMessage(long messageId) {
-        return null;
-    }
-
-    @Override
-    public void updateMessage(Message message) throws SQLException {
-    }
-
-    @Override
-    public void deleteMessage(long messageId) throws SQLException {
-
-    }
-
+    /**
+     * Gets all tweets by the specified user ordered by date, newest first.
+     * @param user User
+     * @param instruments instruments string to be added to tweet
+     * @param limit how many tweets to get
+     * @param offset from what position
+     * @return ArrayList of Tweets
+     */
     @Override
     public List<Tweet> getUserMessages(User user, String instruments, int limit, int offset) {
         List<Tweet> tweets = new ArrayList<>();
@@ -134,6 +137,14 @@ public class H2MessageDao implements MessageDao {
         return tweets;
     }
 
+    /**
+     * Get tweets from users, who are in the subscription list of the specified User,
+     * ordered by date, newest first.
+     * @param userId User's id
+     * @param limit how many tweets to get
+     * @param offset from what position
+     * @return ArrayList of Tweets
+     */
     @Override
     public List<Tweet> getSubscriptionMessages(long userId, int limit, int offset) {
         List<Tweet> tweets = new ArrayList<>();
@@ -151,6 +162,13 @@ public class H2MessageDao implements MessageDao {
         return tweets;
     }
 
+    /**
+     * Gets tweets from users, who have the same instruments, ordered by date, newest first.
+     * @param userId User's id
+     * @param limit how many tweets to get
+     * @param offset from what position
+     * @return ArrayList of Tweets
+     */
     @Override
     public List<Tweet> getInstrumentMessages(long userId, int limit, int offset) {
         List<Tweet> tweets = new ArrayList<>();
@@ -168,6 +186,13 @@ public class H2MessageDao implements MessageDao {
         return tweets;
     }
 
+    /**
+     * Gets tweets from the same country as User, ordered by date, newest first.
+     * @param userId User's id
+     * @param limit how many tweets to get
+     * @param offset from what position
+     * @return ArrayList of Tweets
+     */
     @Override
     public List<Tweet> getCountryMessages(long userId, int limit, int offset) {
         List<Tweet> tweets = new ArrayList<>();
@@ -185,6 +210,12 @@ public class H2MessageDao implements MessageDao {
         return tweets;
     }
 
+    /**
+     * Service method for processing the ResultSet with tweets.
+     * @param resultSet ResultSet to process
+     * @param tweets List for processed tweets
+     * @throws SQLException if something wrong with the ResultSet
+     */
     private void getTweetsFromResultSet(ResultSet resultSet, List<Tweet> tweets) throws SQLException {
         while (resultSet.next()) {
             Tweet tweet = new Tweet();

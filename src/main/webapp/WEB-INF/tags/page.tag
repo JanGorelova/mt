@@ -1,3 +1,4 @@
+<%--Simple page template--%>
 <%@tag description="Page template" pageEncoding="UTF-8" %>
 <%@attribute name="title" %>
 <%@attribute name="header" fragment="true" %>

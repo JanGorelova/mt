@@ -14,13 +14,19 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 /**
- * Created by iMac on 10/03/17.
+ * Servlet gets new tweet data from the request and sends it to the database. Responce contains the auto-generated
+ * id of the new tweet.
  */
 @WebServlet("/NewTweet")
 public class NewTweet extends HttpServlet {
 
     private DaoFactory daoFactory;
 
+    /**
+     * Method gets the common Dao Factory from servlet context.
+     *
+     * @throws ServletException - standard Servlet exception
+     */
     @Override
     public void init() throws ServletException {
         daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
@@ -31,12 +37,13 @@ public class NewTweet extends HttpServlet {
         response.setContentType("text/html");
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("User");
-        String tweetText = request.getParameter("tweetText");
-
-        if (user != null && tweetText != null && !tweetText.isEmpty()) {
-            Message message = new Message(user.getUserId(), 0, LocalDateTime.now(), tweetText);
-            long result = daoFactory.getMessageDao().createMessage(message);
-            response.getWriter().write(Long.toString(result));
+        if (user != null) {
+            String tweetText = request.getParameter("tweetText");
+            if (tweetText != null && !tweetText.isEmpty()) {
+                Message message = new Message(user.getUserId(), 0, LocalDateTime.now(), tweetText.trim());
+                long result = daoFactory.getMessageDao().createMessage(message);
+                response.getWriter().write(Long.toString(result));
+            }
         }
     }
 

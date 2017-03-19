@@ -11,10 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 /**
- * Created by iMac on 16/03/17.
+ * Servlet prepares data to show it on the My Profile page, then forwards the request to the profile.jsp
  */
 @WebServlet("/ShowProfile")
 public class ShowProfile extends HttpServlet {
@@ -23,7 +22,9 @@ public class ShowProfile extends HttpServlet {
         HttpSession session = request.getSession();
         Object obj = session.getAttribute("User");
 
+        // Proceed only if the user is logged in
         if (obj != null) {
+            @SuppressWarnings("unchecked")
             List<Instrument> instrumentList = (List<Instrument>) session.getAttribute("Instruments");
             User user = (User) obj;
             StringBuilder instrumentsTemporary = new StringBuilder();
@@ -36,7 +37,6 @@ public class ShowProfile extends HttpServlet {
             request.setAttribute("lastName", user.getLastName());
             request.setAttribute("country", user.getCountry().toString());
             request.getRequestDispatcher("/WEB-INF/profile.jsp").forward(request, response);
-
         }
     }
 

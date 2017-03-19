@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebListener;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created by iMac on 06/03/17.
+ * Listener that adjusts some servlet context attributes: countries, hashGenerators
  */
 
 @WebListener

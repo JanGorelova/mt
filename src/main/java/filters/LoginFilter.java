@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by iMac on 08/03/17.
+ * Filter that redirects authorized users to the main page and others to the login page.
  */
 @WebFilter(urlPatterns = {"/index.jsp", "/WEB-INF/main.jsp"})
 public class LoginFilter implements Filter {
@@ -29,5 +29,4 @@ public class LoginFilter implements Filter {
     public void init(FilterConfig config) throws ServletException {
 
     }
-
 }

@@ -8,10 +8,19 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ResourceBundle;
 
 /**
- * Created by iMac on 16/03/17.
+ * Class with static methods for validating user's profile data.
  */
 public class Validator {
 
+    /**
+     * Method validates user's data for update request
+     *
+     * @param request    current request
+     * @param bundle     localization resources
+     * @param daoFactory DAO
+     * @param user       user with new data
+     * @return validation status
+     */
     public static boolean validateUpdatedProfile(HttpServletRequest request, ResourceBundle bundle, DaoFactory daoFactory, User user) {
 
         String login = request.getParameter("login");
@@ -67,7 +76,7 @@ public class Validator {
         request.setAttribute("country", country.toString());
 
         if (login != null && !login.equals(user.getLogin())) {
-           if (daoFactory.getUserDao().readUserByLogin(login) != null) {
+            if (daoFactory.getUserDao().readUserByLogin(login) != null) {
                 errorFlag = true;
                 request.setAttribute("loginExists", bundle.getString("loginExists"));
             }
@@ -75,6 +84,14 @@ public class Validator {
         return errorFlag;
     }
 
+    /**
+     * Method validates new user's data for create request
+     *
+     * @param request    current request
+     * @param bundle     localization resources
+     * @param daoFactory DAO
+     * @return validation status
+     */
     public static boolean validateNewUser(HttpServletRequest request, ResourceBundle bundle, DaoFactory daoFactory) {
 
         String login = request.getParameter("login");

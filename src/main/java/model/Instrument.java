@@ -1,19 +1,27 @@
 package model;
 
 /**
- * Created by Air on 08/02/2017.
+ * DTO class that represents a musical instrument
  */
 public class Instrument {
 
     private long instrumentId;
     private String instrumentName;
 
-    public Instrument() {
-    }
-
+    /**
+     * All-args constructor for Instrument instance
+     * @param instrumentId instrument id
+     * @param instrumentName name of the instrument
+     */
     public Instrument(long instrumentId, String instrumentName) {
         this.instrumentId = instrumentId;
         this.instrumentName = instrumentName;
+    }
+
+    /**
+     * No-args constructor for Instrument instance
+     */
+    public Instrument() {
     }
 
     public long getInstrumentId() {

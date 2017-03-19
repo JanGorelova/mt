@@ -1,3 +1,4 @@
+<%-- Header tag without menu --%>
 <%@tag description="Header tag" pageEncoding="UTF-8" %>
 <%@attribute name="text" %>
 

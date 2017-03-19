@@ -1,11 +1,14 @@
 /**
- * Created by iMac on 10/03/17.
+ * Some JS functions for MusicTwitter
  */
 $(document).ready(function () {
     getSubscriptionTweets();
 });
 
+// Stores the current page
 var currentPage = 'getSubscriptionTweets';
+
+// Stores the number of watched pages
 var pageCount = 1;
 
 function refreshCurrentPage() {

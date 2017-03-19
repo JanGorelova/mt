@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by Air on 08/03/2017.
+ * Servlet invalidates the session and redirects to the root of the service
  */
 @WebServlet("/logout")
 public class Logout extends HttpServlet {

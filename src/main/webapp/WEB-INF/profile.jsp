@@ -1,9 +1,5 @@
 <%--
-  Created by IntelliJ IDEA.
-  User: iMac
-  Date: 16/03/17
-  Time: 17:39
-  To change this template use File | Settings | File Templates.
+Edit profile page
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 

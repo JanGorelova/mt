@@ -2,7 +2,6 @@ package controllers;
 
 import dao.DaoFactory;
 import model.Countries;
-import model.Instrument;
 import model.User;
 import services.AddNewInstruments;
 import services.HashGenerator;
@@ -17,13 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Created by iMac on 16/03/17.
+ * Servlet for processing, validating and updating the edited user's information from My Profile page.
  */
 @WebServlet("/EditUser")
 public class EditUser extends HttpServlet {
@@ -31,6 +28,10 @@ public class EditUser extends HttpServlet {
     private DaoFactory daoFactory;
     private HashGenerator hashGenerator;
 
+    /**
+     * Method gets common Dao Factory and Hash Generator from servlet context.
+     * @throws ServletException - standard Servlet exception
+     */
     @Override
     public void init() throws ServletException {
         ServletContext context = getServletContext();
@@ -48,9 +49,12 @@ public class EditUser extends HttpServlet {
             Locale locale = (Locale) session.getAttribute("locale");
             ResourceBundle bundle = ResourceBundle.getBundle("register", locale);
 
+            // If validation failed, get back to the profile settings page and show errors
             if (Validator.validateUpdatedProfile(request, bundle, daoFactory, user)) {
                 request.getRequestDispatcher("/WEB-INF/profile.jsp").forward(request, response);
                 return;
+
+                // If validation is OK, process and update new info to the database
             } else {
                 String login = request.getParameter("login").trim();
                 String firstName = request.getParameter("firstName").trim();
@@ -65,8 +69,14 @@ public class EditUser extends HttpServlet {
                 user.setCountry(country);
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
-                daoFactory.getUserDao().updateUser(user);
+                user.setUserId(daoFactory.getUserDao().updateUser(user));
 
+                // If login has been used before validation and creating
+                if (user.getUserId() == 0) {
+                    request.setAttribute("loginExists", bundle.getString("loginExists"));
+                    request.getRequestDispatcher("/profile.jsp").forward(request, response);
+                    return;
+                }
 
                 try {
                     AddNewInstruments.addNewInstruments(instrument, daoFactory, session, user);

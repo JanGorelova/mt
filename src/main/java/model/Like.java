@@ -1,19 +1,25 @@
 package model;
 
-import java.util.Date;
-
 /**
- * Created by Air on 08/02/2017.
+ * DTO class that represents Like for single Tweet
  */
 public class Like {
 
+    // Like id
     private long likeId;
+
+    // Id of the user, who put this like
     private long userId;
+
+    // Id of the liked message
     private long messageId;
 
-    public Like() {
-    }
-
+    /**
+     * All-args constructor for Like instance
+     * @param likeId Like id
+     * @param userId Id of the user, who put this like
+     * @param messageId Id of the liked message
+     */
     public Like(long likeId, long userId, long messageId) {
         this.likeId = likeId;
         this.userId = userId;

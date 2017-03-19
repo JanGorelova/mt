@@ -1,9 +1,7 @@
 package model;
 
-import java.util.Date;
-
 /**
- * Created by Air on 07/02/2017.
+ * DTO class that represents user
  */
 public class User {
 
@@ -14,9 +12,21 @@ public class User {
     private String lastName;
     private Countries country;
 
+    /**
+     * No-args constructor for User instance
+     */
     public User() {
     }
 
+    /**
+     * All-args constructor for User instance
+     * @param id user id
+     * @param login login
+     * @param password password hash
+     * @param firstName first name
+     * @param lastName last name
+     * @param country country
+     */
     public User(long id, String login, String password, String firstName, String lastName, Countries country) {
         this.userId = id;
         this.login = login;

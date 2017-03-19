@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
- * Created by Air on 16/03/2017.
+ * Filter that sets the UTF-8 encoding to each request
  */
 @WebFilter("/*")
 public class CharsetFilter implements Filter {

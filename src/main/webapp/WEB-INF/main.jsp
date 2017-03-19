@@ -1,9 +1,5 @@
 <%--
-  Created by IntelliJ IDEA.
-  User: iMac
-  Date: 06/03/17
-  Time: 01:02
-  To change this template use File | Settings | File Templates.
+Main page
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -101,7 +97,6 @@
         &nbsp;&nbsp;&nbsp;
         <a href="<c:url value="/index.jsp?locale=en"/>">English</a> / <a href="<c:url value="/index.jsp?locale=ru"/>">Русский</a>
     </div>
-</div>
 </div>
 </body>
 </html>

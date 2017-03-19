@@ -5,17 +5,27 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created by iMac on 18/03/17.
+ * Wrapper for MessageDigest class, generates hash from a string
  */
 public class HashGenerator {
 
-    private final String ALGORITHM = "MD5";
+    // Hash algorithm
+    private static final String ALGORITHM = "MD5";
     private MessageDigest digest;
 
+    /**
+     * Creates a new instance of HashGenerator
+     * @throws NoSuchAlgorithmException can't happen
+     */
     public HashGenerator() throws NoSuchAlgorithmException {
         digest = MessageDigest.getInstance(ALGORITHM);
     }
 
+    /**
+     * Generates hash from a string
+     * @param password string to hash
+     * @return hashed string
+     */
     public String getHash(String password)  {
         digest.reset();
         try {

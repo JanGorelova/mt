@@ -10,13 +10,14 @@ import javax.sql.DataSource;
 import java.sql.*;
 
 /**
- * Created by Air on 26/02/2017.
+ * UserDao implementation for the H2 database.
  */
 public class H2UserDao implements UserDao {
 
     private DataSource dataSource;
-    static final Logger log = LoggerFactory.getLogger(H2UserDao.class);
+    private static final Logger log = LoggerFactory.getLogger(H2UserDao.class);
 
+    // SQL queries for all necessary operations:
     private static final String SELECT_USER_BY_ID_SQL =
             "SELECT login, password, first_name, last_name, country FROM Users WHERE user_id = ?";
 
@@ -29,10 +30,21 @@ public class H2UserDao implements UserDao {
     private static final String UPDATE_USER_SQL =
             "UPDATE Users SET login = ?, password = ?, first_name = ?, last_name = ?, country = ? WHERE user_id = ?;";
 
-    public H2UserDao(DataSource dataSource) {
+    /**
+     * Simple constructor of the UserDao implementation for the H2 database.
+     *
+     * @param dataSource any DataSource
+     */
+    H2UserDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
+    /**
+     * Creates new User in the database
+     *
+     * @param user User to create
+     * @return new user's id
+     */
     @Override
     public long createUser(User user) {
         try (Connection connection = dataSource.getConnection();
@@ -55,6 +67,12 @@ public class H2UserDao implements UserDao {
         return 0;
     }
 
+    /**
+     * Gets the User with the specified id from the database.
+     *
+     * @param userId - user id
+     * @return User object
+     */
     @Override
     public User readUserById(long userId) {
         User user = new User();
@@ -76,6 +94,12 @@ public class H2UserDao implements UserDao {
         return user;
     }
 
+    /**
+     * Gets User with the specified login from the database.
+     *
+     * @param login User's login
+     * @return User object
+     */
     @Override
     public User readUserByLogin(String login) {
         User user = new User();
@@ -98,8 +122,14 @@ public class H2UserDao implements UserDao {
         return user;
     }
 
+    /**
+     * Updates the specified User in the database
+     *
+     * @param user User to update
+     * @return user id or 0 if login is used
+     */
     @Override
-    public void updateUser(User user) {
+    public long updateUser(User user) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_USER_SQL)) {
             statement.setString(1, user.getLogin());
@@ -109,12 +139,10 @@ public class H2UserDao implements UserDao {
             statement.setString(5, user.getCountry().toString());
             statement.setLong(6, user.getUserId());
             statement.executeUpdate();
+            return user.getUserId();
         } catch (SQLException e) {
             log.warn(e.getMessage());
+            return 0;
         }
-    }
-
-    @Override
-    public void deleteUser(User user) throws SQLException {
     }
 }

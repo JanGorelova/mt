@@ -14,13 +14,18 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by iMac on 13/03/17.
+ * Servlet handles the pressed Unsubscribe link and sends the data to the database
  */
 @WebServlet("/UnsubscribePressed")
 public class UnsubscribePressed extends HttpServlet {
 
     private DaoFactory daoFactory;
 
+    /**
+     * Method gets the common Dao Factory from servlet context.
+     *
+     * @throws ServletException - standard Servlet exception
+     */
     @Override
     public void init() throws ServletException {
         daoFactory = (DaoFactory) getServletContext().getAttribute("daoFactory");
@@ -30,15 +35,18 @@ public class UnsubscribePressed extends HttpServlet {
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("User");
-        List<Subscription> subscriptions = (List<Subscription>) session.getAttribute("Subscriptions");
-        String subscriptedUserId = request.getParameter("userId");
 
-        if (user != null && !subscriptedUserId.isEmpty()) {
-            long subscriptedUserIdLong = Long.parseLong(subscriptedUserId);
-            daoFactory.getSubscriptionDao().deleteSubscription(new Subscription(0, user.getUserId(), subscriptedUserIdLong));
+        @SuppressWarnings("unchecked")
+        List<Subscription> subscriptions = (List<Subscription>) session.getAttribute("Subscriptions");
+        String subscribedUserId = request.getParameter("userId");
+
+        // Proceed only if the user is authorized and user id to unsubscribe is correct
+        if (user != null && !subscribedUserId.isEmpty()) {
+            long subscribedUserIdLong = Long.parseLong(subscribedUserId);
+            daoFactory.getSubscriptionDao().deleteSubscription(new Subscription(0, user.getUserId(), subscribedUserIdLong));
             for (Subscription subscription: subscriptions) {
                 if (subscription.getUserId() == user.getUserId()
-                        && subscription.getSubscriptedUserId() == subscriptedUserIdLong) {
+                        && subscription.getSubscriptedUserId() == subscribedUserIdLong) {
                     subscriptions.remove(subscription);
                     break;
                 }

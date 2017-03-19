@@ -1,3 +1,4 @@
+<%--Extended footer with logout tag--%>
 <%@tag description="Extended footer with logout tag" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>

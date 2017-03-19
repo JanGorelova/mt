@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 /**
- * Created by iMac on 17/03/17.
+ * Filter that changes the locale session attribute if there is such parameter in request.
  */
 @WebFilter("/*")
 public class LocaleFilter implements Filter {

@@ -1,6 +1,5 @@
 package listeners;
 
-import controllers.RegisterUser;
 import dao.DaoFactory;
 import dao.h2.H2DaoFactory;
 import model.Countries;
@@ -25,10 +24,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * Created by iMac on 05/03/17.
+ * Initializes the database and sets it as "dataSource" servlet context attribute.
+ * Also generates some content for service.
  */
-// INSERT INTO Users (login, password, first_name, last_name, country) VALUES ('admin', 'admin', 'Phil', 'Kuzmin', 'RUSSIA');
-// INSERT INTO Users_Instruments (user_id, instrument_id) VALUES (1 , 1);
 @WebListener
 public class DatabaseInitListener implements ServletContextListener {
 

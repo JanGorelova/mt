@@ -1,7 +1,6 @@
 package dao.h2;
 
 import dao.InstrumentDao;
-import listeners.DatabaseInitListener;
 import model.Instrument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,35 +14,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by iMac on 09/03/17.
+ * InstrumentDao implementation for the H2 database.
  */
+@SuppressWarnings("unchecked")
 public class H2InstrumentDao implements InstrumentDao {
 
     private DataSource dataSource;
-    static final Logger log = LoggerFactory.getLogger(H2InstrumentDao.class);
+    private static final Logger log = LoggerFactory.getLogger(H2InstrumentDao.class);
 
-    private final String CREATE_INSTRUMENT_SQL = "INSERT INTO Instruments (instrument_name) VALUES (?) ;";
+    // SQL queries for all necessary operations:
+    private static final String CREATE_INSTRUMENT_SQL = "INSERT INTO Instruments (instrument_name) VALUES (?) ;";
 
-    private final String READ_INSTRUMENT_SQL = "SELECT instrument_name FROM Instruments WHERE instrument_id = ?";
+    private static final String READ_INSTRUMENT_SQL = "SELECT instrument_name FROM Instruments WHERE instrument_id = ?";
 
-    private final String GET_ALL_INSTRUMENTS_SQL = "SELECT instrument_id, instrument_name FROM Instruments;";
+    private static final String GET_ALL_INSTRUMENTS_SQL = "SELECT instrument_id, instrument_name FROM Instruments;";
 
-    private final String GET_USER_INSTRUMENTS_SQL =
+    private static final String GET_USER_INSTRUMENTS_SQL =
             "SELECT i.instrument_id, i.instrument_name " +
                     "FROM Instruments AS i INNER JOIN Users_Instruments AS u " +
                     "ON i.instrument_id = u.instrument_id " +
                     "WHERE u.user_id = ?";
 
-    private final String DELETE_ALL_USER_INSTRUMENTS = "DELETE FROM Users_Instruments WHERE user_id = ?;";
+    private static final String DELETE_ALL_USER_INSTRUMENTS = "DELETE FROM Users_Instruments WHERE user_id = ?;";
 
-    private final String SET_INSTRUMENTS_TO_USER_SQL =
+    private static final String SET_INSTRUMENTS_TO_USER_SQL =
             "INSERT INTO Users_Instruments (user_id, instrument_id) " +
                     "VALUES (?, (SELECT instrument_id FROM Instruments WHERE instrument_name = ?))";
 
-    public H2InstrumentDao(DataSource dataSource) {
+    /**
+     * Simple constructor of the InstrumentDao implementation for the H2 database.
+     * @param dataSource any DataSource
+     */
+    H2InstrumentDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
+    /**
+     * Creates one or more instruments from the list
+     * @param instruments - list of Instruments to create
+     * @return - number of created instruments
+     */
     @Override
     public long createInstruments(List<Instrument> instruments) {
         int[] result = {0};
@@ -60,6 +70,11 @@ public class H2InstrumentDao implements InstrumentDao {
         return result.length;
     }
 
+    /**
+     * Read one Instrument from DB by the specified id
+     * @param instrumentId - id of the instrument to read
+     * @return - Instrument object with the specified id
+     */
     @Override
     public Instrument readInstrument(long instrumentId) {
         Instrument instrument = new Instrument();
@@ -77,16 +92,11 @@ public class H2InstrumentDao implements InstrumentDao {
         return instrument;
     }
 
-    @Override
-    public void updateInstrument(Instrument instrument) throws SQLException {
-
-    }
-
-    @Override
-    public void deleteInstrument(long instrumentId) throws SQLException {
-
-    }
-
+    /**
+     * Reads all instruments of the specified user
+     * @param userId - user id
+     * @return - ArrayList of Instruments
+     */
     @Override
     public List<Instrument> getUserInstruments(long userId) {
         List<Instrument> instruments = new ArrayList<>();
@@ -107,6 +117,10 @@ public class H2InstrumentDao implements InstrumentDao {
         return instruments;
     }
 
+    /**
+     * Reads all instruments registered in the database
+     * @return - ArrayList of all Instruments
+     */
     @Override
     public List<Instrument> getAllInstruments() {
         List<Instrument> instruments = new ArrayList<>();
@@ -126,6 +140,13 @@ public class H2InstrumentDao implements InstrumentDao {
         return instruments;
     }
 
+    /**
+     * Assigns one or more instruments to the specified user
+     * @param userId - user id
+     * @param instruments - array of the instruments' names
+     * @return number of instruments that has been added
+     * @throws SQLException if the arguments are incorrect
+     */
     @Override
     public int setInstrumentsToUser(long userId, String[] instruments) throws SQLException {
         try (Connection connection = dataSource.getConnection();
@@ -140,6 +161,10 @@ public class H2InstrumentDao implements InstrumentDao {
         }
     }
 
+    /**
+     * Clear all instruments for the specified user
+     * @param userId - user id
+     */
     @Override
     public void deleteAllUserInstruments(long userId) {
         try (Connection connection = dataSource.getConnection();
